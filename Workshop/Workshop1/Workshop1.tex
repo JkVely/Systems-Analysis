@@ -1,0 +1,67 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Detect Sleep States Using Accelerometers}
+
+\author{\IEEEauthorblockN{Juan Carlos Quintero Rubiano}
+\IEEEauthorblockA{Code: 20232020172\\
+\textit{Systems Engineering} \\
+\textit{Francisco Jose de Caldas District University}\\
+Bogota, Colombia \\
+jcquineror@udistrital.edu.co}
+\and
+\IEEEauthorblockN{Nicolas Diaz Salamanca}
+\IEEEauthorblockA{Code: 20222020---\\
+\textit{Systems Engineering} \\
+\textit{Francisco Jose de Caldas District University}\\
+Bogota, Colombia \\
+---@udistrital.edu.co}
+}
+
+\maketitle
+
+\begin{abstract}
+This workshop is a systemic analysis of the prized competition of Kaggle, which consists of a system that detects sleep states using accelerometers. The system is designed to analyze the data collected from accelerometers and classify different sleep states based on the patterns observed in the data. The analysis includes a detailed examination of the system's components, their interactions, and the emergent behaviors that arise from these interactions. By understanding the system's dynamics, we aim to identify potential areas for improvement and optimization, ultimately enhancing the accuracy and reliability of sleep state detection.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Systemic analysis, sleep state detection, accelerometers, emergent behaviors, optimization.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\subsection{Competition Overview}
+
+This workshop analyzes the Kaggle competition "Child Mind Institute - Detect Sleep States", which aims to improve sleep monitoring through accelerometer data analysis. The competition focuses on developing a model to accurately detect sleep onset and wakefulness using wrist-worn accelerometer data. This has the potential to enable larger-scale sleep studies and improve our understanding of sleep's impact on mood, behavior, and overall health, especially in children.
+
+\subsubsection{Competition Objective}
+The primary objective is to create a robust model for detecting sleep states from accelerometer data. This involves classifying periods of sleep and wakefulness by analyzing time-series data from wearable sensors. The model should generalize well across individuals and account for variations in sleep patterns to provide insights into sleep and potential sleep disorders. Ultimately, the goal is to improve awareness and guidance surrounding the importance of sleep.
+
+\subsubsection{Dataset Structure}
+The dataset consists of around 500 multi-day recordings of accelerometer data, labeled with sleep onset and wake events. The goal is to detect these events using time-series data from wrist-worn accelerometers.
+
+Key components include:
+
+\begin{itemize}
+    \item \textbf{Accelerometer Data:} Located in \texttt{train\_series.parquet} and \texttt{test\_series.parquet}, containing \texttt{series\_id}, \texttt{step}, \texttt{timestamp}, \texttt{anglez}, and \texttt{enmo} columns.
+    \item \textbf{Sleep Event Labels:} Found in \texttt{train\_events.csv}, providing sleep logs with \texttt{series\_id}, \texttt{night}, \texttt{event} (onset or wakeup), \texttt{step}, and \texttt{timestamp}.
+\end{itemize}
+
+\textbf{Important Considerations for Sleep Data:}
+\begin{itemize}
+    \item Sleep periods must be at least 30 minutes long and can have interruptions of activity no longer than 30 minutes.
+    \item Only the longest sleep window each night is recorded.
+    \item If no valid sleep window is found, no events are recorded.
+    \item Periods of device removal (indicated by little signal variation) are not annotated.
+\end{itemize}
+
+\end{document}

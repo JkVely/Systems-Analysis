@@ -1,14 +1,14 @@
 # Workshop 1
 - **Sistema a analizar:** [Child Mind Institute - Detect Sleep States](https://www.kaggle.com/competitions/child-mind-institute-detect-sleep-states)
 ## Descripción general de la competencia
-- [ ] Proporcionar un resumen sucinto del objetivo de la competencia
-- [ ] Describir la estructura del conjunto de datos
+- [x] Proporcionar un resumen sucinto del objetivo de la competencia
+- [x] Describir la estructura del conjunto de datos
 - [ ] Enumerar las restricciones importantes
 
 ## System analysis report
 ### Systemic analysis
 - [ ] Definir los elementos del sistema
-- [x] Revisar las conexiones existentes
+- [ ] Revisar las conexiones existentes
 - [ ] Realizar el diagrama
 
 ### Complexity & Sensivity
