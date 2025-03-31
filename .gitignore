@@ -180,6 +180,12 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 # Archives
-*/*.pdf
+.pdf
 *.txt
 
+#Latex
+*.log
+*.fls
+*.fdb
+*.aux
+*.fdb_latexmk
