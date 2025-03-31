@@ -3,7 +3,7 @@
 ## Descripción general de la competencia
 - [x] Proporcionar un resumen sucinto del objetivo de la competencia
 - [x] Describir la estructura del conjunto de datos
-- [ ] Enumerar las restricciones importantes
+- [x] Enumerar las restricciones importantes
 
 ## System analysis report
 ### Systemic analysis
