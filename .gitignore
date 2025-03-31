@@ -189,3 +189,30 @@ cython_debug/
 *.fdb
 *.aux
 *.fdb_latexmk
+
+.obsidian/
+# Java
+*.class
+*.jar
+*.war
+*.ear
+/target/
+/out/
+
+# Obsidian
+.obsidian/cache
+.obsidian/plugins
+.obsidian/themes
+
+# VS Code
+.vscode/
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
