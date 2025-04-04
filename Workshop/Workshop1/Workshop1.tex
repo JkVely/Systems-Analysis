@@ -13,19 +13,27 @@
 
 \title{Detect Sleep States Using Accelerometers}
 
-\author{\IEEEauthorblockN{Juan Carlos Quintero Rubiano}
-\IEEEauthorblockA{Code: 20232020172\\
-\textit{Systems Engineering} \\
-\textit{Francisco Jose de Caldas District University}\\
-Bogota, Colombia \\
-jcquineror@udistrital.edu.co}
-\and
-\IEEEauthorblockN{Nicolas Diaz Salamanca}
-\IEEEauthorblockA{Code: 20222020059\\
-\textit{Systems Engineering} \\
-\textit{Francisco Jose de Caldas District University}\\
-Bogota, Colombia \\
-jndiazs@udistrital.edu.co}
+\author{
+    \IEEEauthorblockN{Juan Carlos Quintero Rubiano}
+    \IEEEauthorblockA{Code: 20232020172\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    jcquineror@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Nicolas Diaz Salamanca}
+    \IEEEauthorblockA{Code: 20222020059\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    jndiazs@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Juan Felipe Wilches Gomez}
+    \IEEEauthorblockA{Code: 20232020---\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    }
 }
 
 \maketitle
@@ -63,6 +71,49 @@ Key components include:
     \item If no valid sleep window is found, no events are recorded.
     \item Periods of device removal (indicated by little signal variation) are not annotated.
 \end{itemize}
+
+\section{Systemic Analysis}
+\subsection{Inputs Description}
+\begin{itemize}
+    \item \textbf{series id:} Unique identifier assigned to each data series, allowing differentiation between records from different sessions or devices.
+    \item \textbf{step:} Represents the sequence or interval at which data is captured, facilitating the tracking of temporal progression during data collection.
+    \item \textbf{timestamp:} A time marker that indicates the exact moment when each measurement was taken, essential for synchronizing and analyzing data over time.
+    \item \textbf{anglez:} Represents the angular measure along the Z-axis, used to assess the device's orientation or tilt during data capture.
+    \item \textbf{enmo:} A derived measure of acceleration that quantifies the magnitude of movement, crucial for detecting patterns and variations in activity that may be related to sleep states.
+\end{itemize}
+
+\subsection{System Components}
+The system consists of several components that interact with each other to achieve the goal of detecting sleep states. These components include:
+\begin{itemize}
+    \item \textbf{Data Processor:} This component is responsible for cleaning, transforming, and preparing the accelerometer data for analysis. It includes tasks such as filtering noise, normalizing data, and extracting relevant features.
+    \item \textbf{Event Detection:} This component identifies sleep onset and wake events based on the processed accelerometer data. Compare the data to classify the data into different sleep states.
+    \item \textbf{States} Are 2 possible classification of the data, sleep and wakefulness. The system must be able to classify the data into these two states based on the patterns observed in the accelerometer data.
+    \item \textbf{Sleep Duration Calculator} This component calculates the duration of sleep based on the detected sleep events. It helps in understanding the overall sleep patterns and their impact on health.
+    \item \textbf{Pattern Recognizer} This component analyzes the detected sleep states and identifies patterns in the data. It helps in understanding the relationship between sleep states and various factors such as mood, behavior, and health.
+    \item \textbf{Validator} This component validates that the detected sleep states correspond to the longest recorded sleep window.
+\end{itemize}
+
+\subsection{Components interactions}
+\begin{enumerate}
+    \item \textbf{Inputs} sends raw data to the \textbf{Data Processor}.
+    \item \textbf{Data Processor} provides cleaned signals to \textbf{Event Detection}.
+    \item \textbf{Event Detection} classifies data into \textbf{States}.
+    \item \textbf{States} send sleep/wake up data to the \textbf{Sleep Duration Calculator}.
+    \item \textbf{Sleep Duration Calculator} provides sleep periods to the \textbf{Pattern Recognizer}.
+    \item \textbf{Pattern Recognizer} sends the sleep period to the \textbf{Validator} to confirm it corresponds to the longest recorded sleep window.
+    \item If the validation fails, the \textbf{Validator} requests a new data sequence from \textbf{Event Detection}.
+    \item If validation succeeds, the \textbf{Pattern Recognizer} sends the event and its score to the \textbf{output}.
+\end{enumerate}
+
+\subsection{Outputs}
+A structured data file, typically in CSV format, containing a time series of detected sleep events (sleep onsets and awakenings) and associated confidence scores, facilitating further analysis and validation.
+
+\subsection{Diagram}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Workshop-1.JPG}
+    \caption{System Diagram}
+\end{figure}
 
 \section{Chaos and randomness}
 
