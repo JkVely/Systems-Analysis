@@ -7,9 +7,9 @@
 
 ## System analysis report
 ### Systemic analysis
-- [ ] Definir los elementos del sistema
-- [ ] Revisar las conexiones existentes
-- [ ] Realizar el diagrama
+- [x] Definir los elementos del sistema
+- [x] Revisar las conexiones existentes
+- [x] Realizar el diagrama
 
 ### Complexity & Sensivity
 Definir
