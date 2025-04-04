@@ -181,6 +181,7 @@ cython_debug/
 .pypirc
 # Archives
 *.pdf
+!/Workshop*/**/*.pdf
 *.txt
 
 #Latex
