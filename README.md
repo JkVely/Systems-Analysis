@@ -12,7 +12,7 @@ In this course, we will learn comprehensive systems analysis and design methodol
 |------|------------|--------|
 | Juan Carlos Quintero | 20232020172 | [GitHub Profile](https://github.com/JKVely) |
 | Juan Nicolas Diaz Salamanca | 20222020059 | [GitHub Profile](https://github.com/jnicolasdz) |
-| Juan Felipe Wilches Gomez | - | [GitHub Profile](https://github.com/jfwil) |
+| Juan Felipe Wilches Gomez | 20231020137 | [GitHub Profile](https://github.com/jfwil) |
 
 ## 📂 Repository Structure
 
