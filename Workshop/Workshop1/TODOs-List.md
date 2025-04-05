@@ -30,7 +30,7 @@ Definir
 
 ### Conclusion
 
-- [ ] Resumir hallazgos
+- [x] Resumir hallazgos
 - [x] Definir debilidades del sistema
 - [x] Hablar de los puntos fuertes del sistema
 
