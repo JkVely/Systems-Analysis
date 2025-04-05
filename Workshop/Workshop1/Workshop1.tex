@@ -28,19 +28,24 @@
     Bogota, Colombia \\
     jndiazs@udistrital.edu.co}
     \and
+    \centering 
     \IEEEauthorblockN{Juan Felipe Wilches Gomez}
-    \IEEEauthorblockA{Code: 20231020137\\
+    \IEEEauthorblockA{Code: 20232020---\\
     \textit{Systems Engineering} \\
     \textit{Francisco Jose de Caldas District University}\\
     Bogota, Colombia \\
-    jfwilchesg@udistrital.edu.co}
     }
 }
 
 \maketitle
 
 \begin{abstract}
-This workshop is a systemic analysis of the prized competition of Kaggle, which consists of a system that detects sleep states using accelerometers. The system is designed to analyze the data collected from accelerometers and classify different sleep states based on the patterns observed in the data. The analysis includes a detailed examination of the system's components, their interactions, and the emergent behaviors that arise from these interactions. By understanding the system's dynamics, we aim to identify potential areas for improvement and optimization, ultimately enhancing the accuracy and reliability of sleep state detection.
+This workshop is a systemic analysis of the prized competition of Kaggle, which consists of a system that detects
+sleep states using accelerometers. The system is designed to analyze the data collected from accelerometers and
+classify different sleep states based on the patterns observed in the data. The analysis includes a detailed examination
+of the system's components, their interactions, and the emergent behaviors that emerges from these interactions.
+By understanding the system's dynamics, we aim to identify potential areas for improvement and optimization, 
+ultimately enhancing the accuracy and reliability of sleep state detection.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -107,8 +112,21 @@ The system consists of several components that interact with each other to achie
 \end{enumerate}
 
 \subsection{Outputs}
-A structured data file, typically in CSV format, containing a time series of detected sleep events (sleep onsets and awakenings) and associated confidence scores, facilitating further analysis and validation.
-
+A structured data file, typically in CSV format, containing a time series of detected sleep events (sleep onsets and awakenings) 
+and associated confidence scores, facilitating further analysis and validation. The CSV file follows the next format:
+\begin{table}[ht]
+    \caption{Data output expected format} 
+    \centering 
+    \begin{tabular}{c c c c c} % centered columns (4 columns)
+    \hline
+    Row id & Series id & Step & Event & Score \\ [0.5ex] 
+    \hline
+    0 & 038441c925bb & 100 & onset & 0.0 \\
+    1 & 038441c925bb & 105 & wakeup & 0.0 \\
+    2 & 03d92c9f6f8a & 80 & onset & 0.5 \\ [1ex]
+    \hline
+    \end{tabular}
+    \end{table}
 \subsection{Diagram}
 \begin{figure}[htbp]
     \centering
@@ -117,16 +135,23 @@ A structured data file, typically in CSV format, containing a time series of det
 \end{figure}
 
 \section{Chaos and randomness}
-
 Chaos is a system mean the sensitive of the initial conditions,
-a chaotic system is deterministic, but the behavior of the system may change radically over time,
-with a little change in the initial conditions. Making the system unpredictable.
+a chaotic system is deterministic meaning that similar inputs expects similar outputs however,
+the behavior of the system may change radically over time with a little change in the initial conditions,
+Making the system unpredictable.
 In the context of the Child Mind Institute - Detect Sleep States competition, The elements and its relations
 in the sleep data collected from accelerometers can be seen as a chaotic part of the system, owing to external data recollections
 during sleep can be influenced by various factors, such as sleep disorders, environmental conditions, and individual differences.
 And the mains elements that interacts with these chaos are fundamental to keep chaos off the system, 
 determing all the differents state of sleep and wakefulness into these unique states this complexity would make it
-challenging to predict sleep states accurately without these elements.
+challenging to predict sleep states accurately without these elements. 
+\section{Complexity and sensitivity}
+The system proposed do not expect to be complex based on the reduced number of relations per element however the feedback 
+loop emerged with Event detect, Sleep Duration Calculator, Pattern Recognizer and Validator elements, it is sensible to the 
+external chaos introduced by the variability in individual sleep patterns, and inaccuracies in sensor measurements. 
+These factors can amplify the complexity of the system, requiring robust algorithms and validation mechanisms to ensure accurate
+detection of sleep states to avoid false positives or negatives looping infinitely in the feedback loop and registering that wrong
+data.
 
 \section{Conclusions}
 
@@ -144,6 +169,5 @@ En caso de pérdida de datos o procesamiento erróneo, el sistema cuenta con un 
 
 Mecanismo de filtro de datos:
 Para evitar la entrada de datos erróneos o irrelevantes, el sistema utiliza un mecanismo de filtrado que cierra entradas bajo condiciones específicas, garantizando que solo se procesen datos válidos.
-
 
 \end{document}

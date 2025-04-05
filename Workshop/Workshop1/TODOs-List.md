@@ -13,12 +13,12 @@
 
 ### Complexity & Sensivity
 Definir
-- [ ] Restricciones posibles
-- [ ] Conflictos
-- [ ] Puntos donde puedan variar las salidas
+- [x] Restricciones posibles
+- [x] Conflictos
+- [x] Puntos donde puedan variar las salidas
 
 ### Chaos & Randomness
-- [ ] Anotar cualquier posible fuente de aleatoriedad
+- [x] Anotar cualquier posible fuente de aleatoriedad
 
 ### Conclusion
 - [ ] Resumir hallazgos
