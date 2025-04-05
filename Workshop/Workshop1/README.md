@@ -32,8 +32,7 @@ Approaching the problem following these top-down abstraction steps we create a r
 
 - System elements : How the systems is compound by enough elements with its specific task in order to get the main goal of the system
 - Elements interactions: How elements are related in order to reach process that aim the main goal
-- Emergent behaviours : How the differents process works together to generate the behaviour of the system
-
+- Emergent behaviours: How the different processes work together to generate the behaviour of the system
 ## Results
 
 [System approach to Detect sleep states problem report](/Workshop/Workshop1/Workshop1.pdf)
