@@ -25,5 +25,5 @@ Systems-Analysis/
 
 ## 🚀 Workshops
 
-- [Workshop 1](/Workshop/Workshop1/): Introduction to system requirements gathering and analysis techniques.
+- [Workshop 1](/Workshop/Workshop1/): Kaggle System Engineering Analysis
   
