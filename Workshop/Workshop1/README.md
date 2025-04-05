@@ -1,17 +1,25 @@
 # Workshop 1
 
+- [Workshop 1](#workshop-1)
+  - [Overview](#overview)
+  - [Methodology](#methodology)
+    - [Second best solutions to the kaggle competitions diagram](#second-best-solutions-to-the-kaggle-competitions-diagram)
+  - [Analysis steps](#analysis-steps)
+  - [Results](#results)
+
+
 ## Overview
 
 This workshop is a systemic analysis of the prized competition of Kaggle [Child Mind Institute - Detect Sleep States](https://www.kaggle.com/competitions/child-mind-institute-detect-sleep-states), which consists of a system that detects
 sleep states using accelerometers. The system is designed to analyze the data collected from accelerometers and
 classify different sleep states based on the patterns observed in the data. The analysis includes a detailed examination
 of the system's components, their interactions, and the emergent behaviors that emerges from these interactions.
-By understanding the system's dynamics, we aim to identify potential areas for improvement and optimization, 
+By understanding the system's dynamics, we aim to identify potential areas for improvement and optimization,
 ultimately enhancing the accuracy and reliability of sleep state detection.
 
 ## Methodology
 
-To analysis this kaggle competition we approach the problem studying the competition overview, requierements, goals and code 
+To analysis this kaggle competition we approach the problem studying the competition overview, requierements, goals and code
 examples given, looking for the inputs data and outputs expected. Since the competition has finished at the moment to analyze the problem, we check the winners solutions in order to get a better approach and understability to the problem, taking specially into account the second best solution which gives a significant system approach:
 
 ### Second best solutions to the kaggle competitions diagram
@@ -28,4 +36,4 @@ Approaching the problem following these top-down abstraction steps we create a r
 
 ## Results
 
-[System approach to Detect sleep states problem report](/Workshop/Workshop1/Workshop1.pdf) 
+[System approach to Detect sleep states problem report](/Workshop/Workshop1/Workshop1.pdf)
