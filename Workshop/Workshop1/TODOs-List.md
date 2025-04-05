@@ -26,5 +26,5 @@ Definir
 - [ ] Hablar de los puntos fuertes del sistema
 
 ## Anexos
-- [ ] Github
+- [x] Github
 - [ ] Crear el readme del workshop describiendo como se llevo a cabo el analisis, cualquier codigo usado y la estructura de la carpeta
