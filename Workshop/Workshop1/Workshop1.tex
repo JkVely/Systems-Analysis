@@ -170,19 +170,23 @@ data.
 
 \section{Conclusions}
 
-Enfoque modular: 
-El sistema esta diseñado para dividir el problema en tareas mas pequeñas y manejables, lo que facilita tanto el mantenimiento como su analisis y mejora continua.
+Secuential system:
+Each component of the system depends on the proper funtioning of the previous one. This makes sure that the process runs in and orderly manner without interruptions.
 
-Sistema Secuencial:
-Cada componente del sistema depende del correcto funcionamiento del anterior. Esto asegura que el proceso se ejecute de manera ordenada y sin interrupciones.
+Feedback:
+The system incorporates an internal cycle that allows to detect posible errors as the data is processed. If a failure is identified, the analysis is repeated since the beggining to correct it.
 
-Retroalimentación:
-El sistema inclorpora un ciclo interno que permite detectar posibles errores a medida que los datos son procesados. Si se identifica un fallo, el análisis se repite desde el principio para corregirlo.
+Fault-Tolerant System:
+In case of data loss or erroneus processing, the system includes a validator that detects the issue and restarts the cicle from the event detection phase,  asegurando que los errores no afecten el resultado final.
 
-Sistema tolerante a fallos:
-En caso de pérdida de datos o procesamiento erróneo, el sistema cuenta con un validador que lo detecta y reinicia el ciclo desde la deteccion de eventos, asegurando que los errores no afecten el resultado final.
+Data filter mechanism:
+To prevent the entry of erroneus or irrelevant data, the system uses a filtering mechanism that closes the inputs under specific conditions, ensuring that only valid data is processed.
 
-Mecanismo de filtro de datos:
-Para evitar la entrada de datos erróneos o irrelevantes, el sistema utiliza un mecanismo de filtrado que cierra entradas bajo condiciones específicas, garantizando que solo se procesen datos válidos.
+\subsection{Weaknesses}
+
+\begin{itemize}
+    \item \textbf{Falta de adaptacion a usuarios especificos:} Dentro del sistema no se toma en cuenta si el usuario al que se analizan sus patrones del sueño sufre de alguna enfermedad, esta tomando medicamentos o bebidas energeticas 
+    
+\end{itemize}
 
 \end{document}
