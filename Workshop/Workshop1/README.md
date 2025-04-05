@@ -30,7 +30,7 @@ Since the competition had already concluded at the time of our analysis, we exam
 
 Approaching the problem following these top-down abstraction steps we create a robust model for detecting sleep states from accelerometer data. This involves classifying periods of sleep and wakefulness by analyzing time-series data from wearable sensors. The model should generalize well across individuals and account for variations in sleep patterns to provide insights into sleep and potential sleep disorders. Ultimately, the goal is to improve awareness and guidance surrounding the importance of sleep.
 
-- System elements : How the systems is compound by enough elements with its specific task in order to get the main goal of the system
+- System elements: How the system is composed of sufficient elements, each with a specific task, to achieve the main goal.
 - Elements interactions: How elements are related in order to reach process that aim the main goal
 - Emergent behaviours: How the different processes work together to generate the behaviour of the system
 ## Results
