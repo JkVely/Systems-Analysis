@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{float}
 
 \floatstyle{boxed} 
 \restylefloat{figure}
@@ -139,22 +140,33 @@ and associated confidence scores, facilitating further analysis and validation. 
 \end{figure}
 
 \section{Chaos and randomness}
-Chaos is a system mean the sensitive of the initial conditions,
-a chaotic system is deterministic meaning that similar inputs expects similar outputs however,
-the behavior of the system may change radically over time with a little change in the initial conditions,
-Making the system unpredictable.
-In the context of the Child Mind Institute - Detect Sleep States competition, The elements and its relations
-in the sleep data collected from accelerometers can be seen as a chaotic part of the system, owing to external data recollections
-during sleep can be influenced by various factors, such as sleep disorders, environmental conditions, and individual differences.
-And the mains elements that interacts with these chaos are fundamental to keep chaos off the system, 
-determing all the differents state of sleep and wakefulness into these unique states this complexity would make it
-challenging to predict sleep states accurately without these elements. 
+Chaos in a system refers to sensitivity to initial conditions.
+A chaotic system is deterministic, meaning similar inputs should produce similar outputs; however,
+the behavior of the system may change radically over time with small changes in the initial conditions,
+making the system unpredictable.
+
+In the context of the Child Mind Institute - Detect Sleep States competition, the elements and their relationships
+in the sleep data collected from accelerometers can be viewed as chaotic parts of the system. External data collection
+during sleep can be influenced by various factors such as sleep disorders, environmental conditions, and individual differences.
+The main elements that interact with this chaos are fundamental to keeping disorder out of the system by
+determining the different states of sleep and wakefulness as distinct categories. Without these elements, this complexity would make it
+challenging to predict sleep states accurately.
+
+Another important source of entropy within the system itself is the event detection component. When classifying accelerometer data into sleep states,
+the algorithm must make decisions based on patterns that may not always be clear-cut.
+This decision-making process introduces entropy as the boundary between sleep and wakefulness isn't always distinct in the data. Additionally,
+the validation mechanism creates another layer of uncertainty when determining whether a detected sleep period is indeed the longest valid window.
+These inherent decision points add entropy to the system's behavior even when the external inputs remain consistent.
+
 \section{Complexity and sensitivity}
-The system proposed do not expect to be complex based on the reduced number of relations per element however the feedback 
-loop emerged with Event detect, Sleep Duration Calculator, Pattern Recognizer and Validator elements, it is sensible to the 
-external chaos introduced by the variability in individual sleep patterns, and inaccuracies in sensor measurements. 
+The proposed system is not expected to be complex due to the reduced number of relations per element. However, the feedback 
+loop that emerges between the Event Detection, Sleep Duration Calculator, Pattern Recognizer, and Validator elements is sensitive to 
+external chaos introduced by the variability in individual sleep patterns and inaccuracies in sensor measurements. 
+
+The components of the system, such as Event Detection, Pattern Recognizer, and Validator, are sensitive to changes in their attributes. The entire system is vulnerable because if any element
+fails to detect a sleep state accurately, it can lead to incorrect classifications and affect the overall performance of the system.
 These factors can amplify the complexity of the system, requiring robust algorithms and validation mechanisms to ensure accurate
-detection of sleep states to avoid false positives or negatives looping infinitely in the feedback loop and registering that wrong
+detection of sleep states and to avoid false positives or negatives that could loop infinitely in the feedback loop and register incorrect
 data.
 
 \section{Conclusions}
