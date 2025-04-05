@@ -22,8 +22,8 @@ Definir
 
 ### Conclusion
 - [ ] Resumir hallazgos
-- [ ] Definir debilidades del sistema
-- [ ] Hablar de los puntos fuertes del sistema
+- [x] Definir debilidades del sistema
+- [x] Hablar de los puntos fuertes del sistema
 
 ## Anexos
 - [x] Github
