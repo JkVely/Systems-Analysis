@@ -4,7 +4,7 @@ This repository contains all workshops, projects, and documentation for the "Ana
 
 ## 📚 About The Course
 
-This course focuses on methods and techniques for analyzing system requirements and designing effective software solutions. Students learn to apply systematic approaches to system development, including requirement gathering, system modeling, architectural design, and implementation planning.
+In this course, we will learn comprehensive systems analysis and design methodologies that enable us to analyze complex systems and develop effective solutions. Throughout the semester, we will explore requirements engineering, system modeling techniques, architectural design patterns, and implementation planning strategies. Professor Carlos Andrés Sierra leads this course at Francisco José de Caldas District University during the 2025-1 academic term. This repository will contain all workshops, projects, and relevant notes as we progress through both theoretical concepts and practical applications in contemporary system development.
 
 ## 👥 Team Members
 
