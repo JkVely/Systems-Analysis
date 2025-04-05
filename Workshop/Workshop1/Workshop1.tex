@@ -178,7 +178,7 @@ Feedback:
 The system incorporates an internal cycle that allows to detect posible errors as the data is processed. If a failure is identified, the analysis is repeated since the beggining to correct it.
 
 Fault-Tolerant System:
-In case of data loss or erroneus processing, the system includes a validator that detects the issue and restarts the cicle from the event detection phase,  asegurando que los errores no afecten el resultado final.
+In case of data loss or erroneus processing, the system includes a validator that detects the issue and restarts the cicle from the event detection phase, ensuring that errors do not affect the final result.
 
 Data filter mechanism:
 To prevent the entry of erroneus or irrelevant data, the system uses a filtering mechanism that closes the inputs under specific conditions, ensuring that only valid data is processed.
@@ -186,8 +186,10 @@ To prevent the entry of erroneus or irrelevant data, the system uses a filtering
 \subsection{Weaknesses}
 
 \begin{itemize}
-    \item \textbf{Falta de adaptacion a usuarios especificos:} Dentro del sistema no se toma en cuenta si el usuario al que se analizan sus patrones del sueño sufre de alguna enfermedad, esta tomando medicamentos o bebidas energeticas 
-    
+    \item \textbf{Falta de adaptacion a usuarios especificos:} The sleep pattern diagnosis of the program can be rendered unusable if the user suffers from any condition or takes medication that affects sleep patterns.
+    \item \textbf{Dependence on the correct functioning of the validation:} The feedback cycle being complex it requires reliable algorithms and mechanisms of validation, causing the abscence of these to generate false positives or negatives.  
+    \item \textbf{Infinite loops:} If the validation detects an error in the recieved data that can not be fixed during event detection it enters a loop where the erroneus validation is repeated.
+    \item \textbf{Sensitivity to chaos:} The system is vulnerable to the randomness and the environment, like abrupt changes of sleep patterns or errors in the accelerometers. 
 \end{itemize}
 
 \end{document}
