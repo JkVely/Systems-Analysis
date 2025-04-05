@@ -16,7 +16,7 @@ This course focuses on methods and techniques for analyzing system requirements 
 
 ## 📂 Repository Structure
 
-```
+```md
 Systems-Analysis/
 ├── README.md                  # Main documentation
 └── Workshop/                  # Workshop directory
@@ -26,3 +26,4 @@ Systems-Analysis/
 ## 🚀 Workshops
 
 - [Workshop 1](/Workshop/Workshop1/): Introduction to system requirements gathering and analysis techniques.
+  

@@ -7,7 +7,6 @@
   - [Analysis steps](#analysis-steps)
   - [Results](#results)
 
-
 ## Overview
 
 This workshop is a systemic analysis of the prized competition of Kaggle [Child Mind Institute - Detect Sleep States](https://www.kaggle.com/competitions/child-mind-institute-detect-sleep-states), which consists of a system that detects
