@@ -18,8 +18,9 @@ ultimately enhancing the accuracy and reliability of sleep state detection.
 
 ## Methodology
 
-To analysis this kaggle competition we approach the problem studying the competition overview, requierements, goals and code
-examples given, looking for the inputs data and outputs expected. Since the competition has finished at the moment to analyze the problem, we check the winners solutions in order to get a better approach and understability to the problem, taking specially into account the second best solution which gives a significant system approach:
+To analyze this Kaggle competition, we approached the problem by studying the competition overview, requirements, goals, and provided code examples, focusing on understanding the input data and expected outputs.
+
+Since the competition had already concluded at the time of our analysis, we examined the winning solutions to gain better insight into the problem. We paid particular attention to the second-best solution, which offered a significant systems approach to solving the challenge.
 
 ### Second best solutions to the kaggle competitions diagram
 
