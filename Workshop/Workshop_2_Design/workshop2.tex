@@ -1,0 +1,76 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{float}
+
+\floatstyle{boxed} 
+\restylefloat{figure}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Workshop 2: System Design for Detecting Sleep States Using Accelerometers}
+
+\author{
+    \IEEEauthorblockN{Juan Carlos Quintero Rubiano}
+    \IEEEauthorblockA{Code: 20232020172\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    jcquineror@udistrital.edu.co}\\
+    \IEEEauthorblockN{Juan Felipe Wilches Gomez}
+    \IEEEauthorblockA{Code: 20231020137\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    jfwilchesg@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Juan Nicolas Diaz Salamanca}
+    \IEEEauthorblockA{Code: 20232020059\\
+    \textit{Systems Engineering} \\
+    \textit{Francisco Jose de Caldas District University}\\
+    Bogota, Colombia \\
+    jndiazs@udistrital.edu.co}
+    }
+
+\maketitle
+
+\begin{abstract}
+    This document builds upon the systemic analysis conducted in Workshop 1 for the Kaggle competition "Child Mind Institute - Detect Sleep States." The focus is on designing a robust system to detect sleep states using accelerometer data. Key findings from the previous analysis, including constraints, data characteristics, and chaos-theory factors, are summarized to guide the design process. The proposed design aims to address identified weaknesses and optimize system performance.
+    \end{abstract}
+    
+    \begin{IEEEkeywords}
+    System design, sleep state detection, accelerometers, chaos theory, optimization.
+    \end{IEEEkeywords}
+    
+    \section{Introduction}
+    \subsection{Overview of Workshop 1 Findings}
+    The systemic analysis conducted in Workshop 1 provided a comprehensive understanding of the system for detecting sleep states using accelerometer data. The following key findings were identified:
+    
+    \begin{itemize}
+        \item \textbf{Constraints:} 
+        \begin{itemize}
+            \item Sleep periods must be at least 30 minutes long, with interruptions no longer than 30 minutes.
+            \item Only the longest sleep window per night is recorded.
+            \item Device removal periods are not annotated, introducing potential gaps in data.
+        \end{itemize}
+        \item \textbf{Data Characteristics:}
+        \begin{itemize}
+            \item The dataset includes accelerometer data with features such as \texttt{anglez} and \texttt{enmo}, which are critical for detecting sleep states.
+            \item Labels for sleep onset and wake events are provided, enabling supervised learning approaches.
+        \end{itemize}
+        \item \textbf{Chaos-Theory Factors:}
+        \begin{itemize}
+            \item Sensitivity to initial conditions: Small variations in accelerometer data can lead to significant changes in sleep state classification.
+            \item Randomness in sleep patterns: External factors such as environmental conditions and individual differences introduce unpredictability.
+        \end{itemize}
+    \end{itemize}
+
+    \end{document}
