@@ -12,7 +12,7 @@
     > - [x] **Características de los datos**: Analizar los datos involucrados, incluyendo su volumen, estructura, frecuencia de actualización y requisitos de integridad.
     > - [x] **Factores de teoría del caos**: Considerar elementos impredecibles o no lineales que podrían impactar el sistema.
 
-   - [ ] **Propuestas de diseño**: Desarrollar ideas de diseño que aborden las restricciones y características identificadas, así como los factores caóticos.
+   - [x] **Propuestas de diseño**: Desarrollar ideas de diseño que aborden las restricciones y características identificadas, así como los factores caóticos.
 
 2. **Definición de requisitos:**
 
