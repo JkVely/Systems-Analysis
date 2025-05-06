@@ -19,58 +19,94 @@
 \title{Workshop 2: System Design for Detecting Sleep States Using Accelerometers}
 
 \author{
-    \IEEEauthorblockN{Juan Carlos Quintero Rubiano}
-    \IEEEauthorblockA{Code: 20232020172\\
-    \textit{Systems Engineering} \\
-    \textit{Francisco Jose de Caldas District University}\\
-    Bogota, Colombia \\
-    jcquineror@udistrital.edu.co}\\
-    \IEEEauthorblockN{Juan Felipe Wilches Gomez}
-    \IEEEauthorblockA{Code: 20231020137\\
-    \textit{Systems Engineering} \\
-    \textit{Francisco Jose de Caldas District University}\\
-    Bogota, Colombia \\
-    jfwilchesg@udistrital.edu.co}
-    \and
-    \IEEEauthorblockN{Juan Nicolas Diaz Salamanca}
-    \IEEEauthorblockA{Code: 20232020059\\
-    \textit{Systems Engineering} \\
-    \textit{Francisco Jose de Caldas District University}\\
-    Bogota, Colombia \\
-    jndiazs@udistrital.edu.co}
-    }
+	\IEEEauthorblockN{Juan Carlos Quintero Rubiano}
+	\IEEEauthorblockA{Code: 20232020172\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jcquineror@udistrital.edu.co}\\
+	\IEEEauthorblockN{Juan Felipe Wilches Gomez}
+	\IEEEauthorblockA{Code: 20231020137\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jfwilchesg@udistrital.edu.co}
+	\and
+	\IEEEauthorblockN{Juan Nicolas Diaz Salamanca}
+	\IEEEauthorblockA{Code: 20232020059\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jndiazs@udistrital.edu.co}
+}
 
 \maketitle
 
 \begin{abstract}
-    This document builds upon the systemic analysis conducted in Workshop 1 for the Kaggle competition "Child Mind Institute - Detect Sleep States." The focus is on designing a robust system to detect sleep states using accelerometer data. Key findings from the previous analysis, including constraints, data characteristics, and chaos-theory factors, are summarized to guide the design process. The proposed design aims to address identified weaknesses and optimize system performance.
-    \end{abstract}
-    
-    \begin{IEEEkeywords}
-    System design, sleep state detection, accelerometers, chaos theory, optimization.
-    \end{IEEEkeywords}
-    
-    \section{Introduction}
-    \subsection{Overview of Workshop 1 Findings}
-    The systemic analysis conducted in Workshop 1 provided a comprehensive understanding of the system for detecting sleep states using accelerometer data. The following key findings were identified:
-    
-    \begin{itemize}
-        \item \textbf{Constraints:} 
-        \begin{itemize}
-            \item Sleep periods must be at least 30 minutes long, with interruptions no longer than 30 minutes.
-            \item Only the longest sleep window per night is recorded.
-            \item Device removal periods are not annotated, introducing potential gaps in data.
-        \end{itemize}
-        \item \textbf{Data Characteristics:}
-        \begin{itemize}
-            \item The dataset includes accelerometer data with features such as \texttt{anglez} and \texttt{enmo}, which are critical for detecting sleep states.
-            \item Labels for sleep onset and wake events are provided, enabling supervised learning approaches.
-        \end{itemize}
-        \item \textbf{Chaos-Theory Factors:}
-        \begin{itemize}
-            \item Sensitivity to initial conditions: Small variations in accelerometer data can lead to significant changes in sleep state classification.
-            \item Randomness in sleep patterns: External factors such as environmental conditions and individual differences introduce unpredictability.
-        \end{itemize}
-    \end{itemize}
+	This document builds upon the systemic analysis conducted in Workshop 1 for the Kaggle competition "Child Mind Institute - Detect Sleep States." The focus is on designing a robust system to detect sleep states using accelerometer data. Key findings from the previous analysis, including constraints, data characteristics, and chaos-theory factors, are summarized to guide the design process. The proposed design aims to address identified weaknesses and optimize system performance.
+\end{abstract}
 
-    \end{document}
+\begin{IEEEkeywords}
+	System design, sleep state detection, accelerometers, chaos theory, optimization.
+\end{IEEEkeywords}
+
+\section{Introduction}
+\subsection{Overview of Workshop 1 Findings}
+The systemic analysis conducted in Workshop 1 provided a comprehensive understanding of the system for detecting sleep states using accelerometer data. The following key findings were identified:
+
+\begin{itemize}
+	\item \textbf{Constraints:}
+	      \begin{itemize}
+		      \item Sleep periods must be at least 30 minutes long, with interruptions no longer than 30 minutes.
+		      \item Only the longest sleep window per night is recorded.
+		      \item Device removal periods are not annotated, introducing potential gaps in data.
+	      \end{itemize}
+	\item \textbf{Data Characteristics:}
+	      \begin{itemize}
+		      \item The dataset includes accelerometer data with features such as \texttt{anglez} and \texttt{enmo}, which are critical for detecting sleep states, and a \texttt{timestamp} column for time-based analysis.
+		      \item Labels for sleep onset and wake events are provided, enabling supervised learning approaches.
+	      \end{itemize}
+	\item \textbf{Chaos-Theory Factors:}
+	      \begin{itemize}
+		      \item Sensitivity to initial conditions: Small variations in accelerometer data can lead to significant changes in sleep state classification.
+		      \item Randomness in sleep patterns: External factors such as environmental conditions and individual differences introduce unpredictability.
+	      \end{itemize}
+\end{itemize}
+
+\subsection{Insights from Systemic Analysis}
+The systemic analysis provided the following critical insights for designing the system:
+
+\begin{itemize}
+    \item \textbf{Feature Importance:}
+    \begin{itemize}
+        \item The accelerometer features \texttt{anglez} and \texttt{enmo} are pivotal for detecting sleep states. Proper preprocessing, such as normalization and noise filtering, is essential to maximize their utility.
+        \item The \texttt{timestamp} column enables time-series analysis, which is crucial for capturing temporal dependencies in sleep patterns.
+    \end{itemize}
+    
+    \item \textbf{Handling Data Gaps:}
+    \begin{itemize}
+        \item Device removal periods and unannotated gaps in the data introduce missing values that require robust imputation techniques or strategies to handle incomplete data effectively.
+        \item Strategies such as forward-filling, interpolation, or machine learning-based imputation can be explored to address these gaps.
+    \end{itemize}
+    
+    \item \textbf{Temporal Dependencies:}
+    \begin{itemize}
+        \item Sleep states are inherently sequential and time-dependent. Leveraging models designed for time-series data, such as Long Short-Term Memory (LSTM) networks or Temporal Convolutional Networks (TCNs), can improve classification accuracy.
+        \item Capturing transitions between sleep and wake states is critical for accurate predictions.
+    \end{itemize}
+    
+    \item \textbf{Model Robustness:}
+    \begin{itemize}
+        \item The system must account for sensitivity to initial conditions, as small variations in accelerometer data can lead to significant changes in classification outcomes.
+        \item Randomness in sleep patterns, influenced by external factors such as environmental conditions or individual variability, requires the model to generalize well across diverse scenarios.
+        \item Techniques such as data augmentation, ensemble modeling, and robust validation can help improve model reliability.
+    \end{itemize}
+    
+    \item \textbf{Optimization Goals:}
+    \begin{itemize}
+        \item The design should focus on minimizing false positives (e.g., misclassifying wake states as sleep) and false negatives (e.g., missing sleep onset events) to ensure high precision and recall.
+        \item Computational efficiency is critical, especially if the system is intended for real-time or large-scale deployment.
+    \end{itemize}
+\end{itemize}
+
+\end{document}
