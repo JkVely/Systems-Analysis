@@ -77,36 +77,103 @@ The systemic analysis conducted in Workshop 1 provided a comprehensive understan
 The systemic analysis provided the following critical insights for designing the system:
 
 \begin{itemize}
-    \item \textbf{Feature Importance:}
-    \begin{itemize}
-        \item The accelerometer features \texttt{anglez} and \texttt{enmo} are pivotal for detecting sleep states. Proper preprocessing, such as normalization and noise filtering, is essential to maximize their utility.
-        \item The \texttt{timestamp} column enables time-series analysis, which is crucial for capturing temporal dependencies in sleep patterns.
-    \end{itemize}
-    
-    \item \textbf{Handling Data Gaps:}
-    \begin{itemize}
-        \item Device removal periods and unannotated gaps in the data introduce missing values that require robust imputation techniques or strategies to handle incomplete data effectively.
-        \item Strategies such as forward-filling, interpolation, or machine learning-based imputation can be explored to address these gaps.
-    \end{itemize}
-    
-    \item \textbf{Temporal Dependencies:}
-    \begin{itemize}
-        \item Sleep states are inherently sequential and time-dependent. Leveraging models designed for time-series data, such as Long Short-Term Memory (LSTM) networks or Temporal Convolutional Networks (TCNs), can improve classification accuracy.
-        \item Capturing transitions between sleep and wake states is critical for accurate predictions.
-    \end{itemize}
-    
-    \item \textbf{Model Robustness:}
-    \begin{itemize}
-        \item The system must account for sensitivity to initial conditions, as small variations in accelerometer data can lead to significant changes in classification outcomes.
-        \item Randomness in sleep patterns, influenced by external factors such as environmental conditions or individual variability, requires the model to generalize well across diverse scenarios.
-        \item Techniques such as data augmentation, ensemble modeling, and robust validation can help improve model reliability.
-    \end{itemize}
-    
-    \item \textbf{Optimization Goals:}
-    \begin{itemize}
-        \item The design should focus on minimizing false positives (e.g., misclassifying wake states as sleep) and false negatives (e.g., missing sleep onset events) to ensure high precision and recall.
-        \item Computational efficiency is critical, especially if the system is intended for real-time or large-scale deployment.
-    \end{itemize}
+	\item \textbf{Feature Importance:}
+	      \begin{itemize}
+		      \item The accelerometer features \texttt{anglez} and \texttt{enmo} are pivotal for detecting sleep states. Proper preprocessing, such as normalization and noise filtering, is essential to maximize their utility.
+		      \item The \texttt{timestamp} column enables time-series analysis, which is crucial for capturing temporal dependencies in sleep patterns.
+	      \end{itemize}
+
+	\item \textbf{Handling Data Gaps:}
+	      \begin{itemize}
+		      \item Device removal periods and unannotated gaps in the data introduce missing values that require robust imputation techniques or strategies to handle incomplete data effectively.
+		      \item Strategies such as forward-filling, interpolation, or machine learning-based imputation can be explored to address these gaps.
+	      \end{itemize}
+
+	\item \textbf{Temporal Dependencies:}
+	      \begin{itemize}
+		      \item Sleep states are inherently sequential and time-dependent. Leveraging models designed for time-series data, such as Long Short-Term Memory (LSTM) networks or Temporal Convolutional Networks (TCNs), can improve classification accuracy.
+		      \item Capturing transitions between sleep and wake states is critical for accurate predictions.
+	      \end{itemize}
+
+	\item \textbf{Model Robustness:}
+	      \begin{itemize}
+		      \item The system must account for sensitivity to initial conditions, as small variations in accelerometer data can lead to significant changes in classification outcomes.
+		      \item Randomness in sleep patterns, influenced by external factors such as environmental conditions or individual variability, requires the model to generalize well across diverse scenarios.
+		      \item Techniques such as data augmentation, ensemble modeling, and robust validation can help improve model reliability.
+	      \end{itemize}
+
+	\item \textbf{Optimization Goals:}
+	      \begin{itemize}
+		      \item The design should focus on minimizing false positives (e.g., misclassifying wake states as sleep) and false negatives (e.g., missing sleep onset events) to ensure high precision and recall.
+		      \item Computational efficiency is critical, especially if the system is intended for real-time or large-scale deployment.
+	      \end{itemize}
 \end{itemize}
+
+\section{Requirements Definition}
+
+Based on the initial analysis and the context of the Kaggle competition "Child Mind Institute - Detect Sleep States", the following requirements have been identified for the system design.
+
+\subsection{Translation of Analysis Findings into Design Requirements}
+
+The findings from the systemic analysis are translated into concrete design requirements, covering both functional and non-functional aspects.
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+	\item \textbf{Sleep State Detection:} The system must accurately detect sleep and wake states from accelerometer data.
+	\item \textbf{Segregation of Longest Sleep Periods:} The system must identify and segregate the longest sleep periods, which must be at least 30 minutes long, as explained in the constraints.
+	\item \textbf{Event Annotation:} The system must identify and annotate sleep onset and wake events.
+	\item \textbf{Data Gap Handling:} The system should handle missing or incomplete data due to device removal or recording gaps.
+\end{itemize}
+
+\subsubsection{Non-Functional Requirements}
+\begin{itemize}
+	\item \textbf{Performance:} The system should process data with low latency (e.g., response time under 1 second for real-time use) and handle large volumes of time-series data efficiently.
+	\item \textbf{Reliability:} The system must achieve high accuracy in sleep state classification (e.g., precision and recall above 90\%) and tolerate occasional data loss or noise.
+	\item \textbf{Scalability:} The architecture should allow for scaling to accommodate more users or increased data volume without significant performance degradation.
+	\item \textbf{Interpretability:} The system should provide transparent and understandable explanations for its predictions to support clinical and research decision-making.
+	\item \textbf{Privacy and Ethics:} The system must ensure data privacy and comply with relevant regulations (e.g., GDPR), especially considering the sensitive nature of children's health data.
+	\item \textbf{Adaptability:} The system should be flexible to support studies in different environments and populations, enabling personalized interventions.
+\end{itemize}
+
+\subsubsection{Requirements Prioritization}
+Requirements are classified as follows:
+\begin{itemize}
+    \item \textbf{Essential:} Sleep state detection, real-time processing, high accuracy, data privacy.
+    \item \textbf{Desirable:} Advanced data gap handling, scalability for large-scale deployment.
+    \item \textbf{Optional:} Integration with external health platforms, customizable alerting features.
+\end{itemize}
+
+\subsubsection{Requirements Documentation}
+All functional and non-functional requirements are documented in a clear and measurable way to ensure they are verifiable during system validation.
+\paragraph{Functional Requirements Verification}
+\begin{itemize}
+    \item \textbf{Sleep State Detection:} Accuracy will be measured using metrics such as precision, recall, and F1-score. The system must achieve at least 90\% precision and recall on a validation dataset.
+    \item \textbf{Segregation of Longest Sleep Periods:} The system will be tested on a dataset with annotated sleep periods. It must correctly identify and segregate the longest sleep period in at least 95\% of cases.
+    \item \textbf{Event Annotation:} The system's ability to annotate sleep onset and wake events will be evaluated against ground truth labels. A minimum accuracy of 90\% is required.
+    \item \textbf{Data Gap Handling:} The system will be tested with datasets containing simulated gaps. It must impute or handle missing data without reducing classification accuracy below 85\%.
+    \item \textbf{Event Detection AP Metric:} The system will be evaluated using the competition's Average Precision (AP) metric for event detection. It must achieve a high AP score by accurately matching predicted events to ground-truth events within the specified tolerance thresholds.
+\end{itemize}
+
+\paragraph{Non-Functional Requirements Verification}
+\begin{itemize}
+    \item \textbf{Performance:} The system's processing time will be measured. It must process data with a response time under 1 second for real-time use and handle datasets of up to 1 million rows without significant performance degradation. Additionally, the system must comply with competition constraints, ensuring that CPU or GPU notebooks complete execution within 9 hours.
+    \item \textbf{Reliability:} The system will undergo stress testing with noisy and incomplete datasets. It must maintain classification accuracy above 75\% under these conditions.
+    \item \textbf{Scalability:} The system will be deployed in a simulated environment with increasing user loads. It must scale to support at least 1,000 concurrent users without exceeding a 5\% increase in response time.
+    \item \textbf{Interpretability:} The system will be evaluated by domain experts for its ability to provide clear and understandable explanations for predictions. At least 80\% of experts must rate the explanations as satisfactory or better.
+    \item \textbf{Privacy and Ethics:} Compliance with GDPR and other relevant regulations will be verified through an audit. The system must pass all privacy and security checks.
+    \item \textbf{Adaptability:} The system will be tested with datasets from different populations and environments. It must maintain accuracy above 85\% across all scenarios.
+    \item \textbf{Submission Compliance:} The system must generate a submission file named \texttt{submission.csv} that adheres to the competition's requirements. The notebook must run without internet access and use only freely and publicly available external data, including pre-trained models.
+\end{itemize}
+
+
+\subsubsection{Discussion of Stakeholder Needs}
+The system must align with the needs of stakeholders, including:
+\begin{itemize}
+	\item \textbf{Use Cases:} Support for clinical research, patient monitoring, and large-scale sleep studies.
+	\item \textbf{Interpretability:} Provide transparent results and explanations for detected sleep states.
+	\item \textbf{Security and Privacy:} Ensure compliance with data protection regulations and ethical standards.
+\end{itemize}
+
+The valuable insights generated by this system can inform the development of personalized interventions and support systems tailored to the unique needs of each child, ultimately improving sleep awareness and health outcomes.
 
 \end{document}
