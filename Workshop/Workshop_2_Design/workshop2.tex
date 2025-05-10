@@ -212,6 +212,7 @@ To address these complexities, the system integrates robust preprocessing, noise
 
 \item \textbf{Advanced Data Preprocessing:}
 The system applies a pipeline of techniques to reduce the impact of erratic input behavior:
+\begin{itemize}
 \item Normalization: Ensures that input sequences like anglez and enmo operate on comparable scales, preventing deviations from arbitrary value ranges.
 \item Smoothing and Noise Filtering: Implements moving average filters and low-pass filters to suppress spurious spikes or sudden noise while preserving temporal dynamics crucial for detecting sleep transitions.
 \item Outlier Detection: Identifies and isolates outliers using statistical thresholds (Z-score, IQR) or anomaly detection models to avoid misleading the learning algorithm.
@@ -225,10 +226,12 @@ To capture the time-dependent and non deterministic nature of sleep behavior, th
     \item Temporal Convolutional Networks (TCNs): Offer efficient, parallelizable alternatives to RNNs, with the ability to model long sequences and handle temporal variability.
 \end{itemize}
 
+\end{itemize}
+
 \subsection{Monitoring and Error Handling for Unanticipated Conditions}
 
 Due to the unpredictability of real world data like device malfunction, removal of the sensor, or behavioral anomalies, the system incorporates comprehensive mechanisms to monitor, detect, and respond to unexpected issues.
-
+\begin{itemize}
 \item \textbf{Real-Time Monitoring Module:}
 Continuously scans incoming data streams for:
 
@@ -246,7 +249,7 @@ When detecting irregularities, the system triggers defined recovery strategies s
     \item Soft Degradation: Switches to simpler heuristics (rule based estimation) when machine learning output becomes unreliable due to excessive noise.
 \end{itemize}
 
-\item \textbf{Logging and Alerting Mechanism:}  
+\item \textbf{Logging and Alerting Mechanism:}
 All detected anomalies and actions taken are registered in a structured error registry. Optional alerts are issued when:
 \begin{itemize}
     \item A threshold number of anomalies is exceeded in a time window.
@@ -254,7 +257,7 @@ All detected anomalies and actions taken are registered in a structured error re
     \item Prediction reliability drops below a critical threshold.
 \end{itemize}
 This ensures early awareness and intervention by clinicians or researchers, preserving system transparency and integrity.
-
+\end{itemize}
 \subsection{Adaptive Learning and Continuous Improvement}
 
 To further enhance resilience against chaos and variability:
