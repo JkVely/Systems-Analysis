@@ -21,9 +21,10 @@ Systems-Analysis/
 ├── README.md                  # Main documentation
 └── Workshop/                  # Workshop directory
     └── Workshop1/             # First workshop materials
+    └── Workshop_2_Design/             # Second workshop materials
 ```
 
 ## 🚀 Workshops
 
 - [Workshop 1](/Workshop/Workshop1/): Kaggle System Engineering Analysis
-  
+- [Workshop 2](/Workshop/Workshop_2_Design/): System Design and Architecture
