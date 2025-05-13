@@ -13,6 +13,8 @@ __pycache__/
 *.log
 *.synctex.gz
 *.out
+*.bbl
+*.blg
 
 # Distribution / packaging
 .Python
