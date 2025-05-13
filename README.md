@@ -19,12 +19,19 @@ In this course, we will learn comprehensive systems analysis and design methodol
 ```md
 Systems-Analysis/
 ├── README.md                  # Main documentation
+├── Project/                   # Final project directory
+│   └── Paper/                 # IEEE paper on sleep state detection
+│       └── sleep_detection_system_paper.tex  # Main LaTeX file
 └── Workshop/                  # Workshop directory
-    └── Workshop1/             # First workshop materials
-    └── Workshop_2_Design/             # Second workshop materials
+    ├── Workshop1/             # First workshop: System Analysis
+    └── Workshop_2_Design/     # Second workshop: System Design
 ```
 
 ## 🚀 Workshops
 
 - [Workshop 1](/Workshop/Workshop1/): Kaggle System Engineering Analysis
 - [Workshop 2](/Workshop/Workshop_2_Design/): System Design and Architecture
+
+## 📊 Project
+
+- [Final Project](/Project/): Comprehensive System Analysis and Design for Sleep State Detection

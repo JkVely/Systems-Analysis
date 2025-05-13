@@ -12,6 +12,7 @@ __pycache__/
 *.fls
 *.log
 *.synctex.gz
+*.out
 
 # Distribution / packaging
 .Python
