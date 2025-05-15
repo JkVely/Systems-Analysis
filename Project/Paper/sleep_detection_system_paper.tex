@@ -68,35 +68,47 @@ Sleep state classification techniques have evolved from the manual scoring rules
 
 \section{Methods and Materials}
 
+\subsection{Overview of the Processing Pipeline}
+Figure~\ref{fig:conceptual_model} illustrates the expanded conceptual model for sleep state classification using accelerometer data. The pipeline is organized into five main stages:
+
+\begin{itemize}
+    \item \textbf{A. Data Acquisition:} Raw signals are collected from wearable accelerometers, including ENMO (acceleration), Anglez (angle based on body position), step intervals, and timestamps.
+    \item \textbf{B. Data Processing:} The data undergoes preprocessing, including calibration, normalization, filtering, and gap reduction, to produce a clean and organized dataset.
+    \item \textbf{C. Feature Extraction:} Features such as activity counts and time patterns are extracted. Events are tagged and sorted to prepare for classification.
+    \item \textbf{D. Classification:} The Sleep State Detector reduces the data to binary sleep/wake states, and the Sleep Data Sequencer determines the overall sleep sequence.
+    \item \textbf{E. Sleep State Prediction:} A predictive model estimates the next sleep state based on the sequence, and an evaluator verifies the quality of predictions, enabling iterative validation.
+\end{itemize}
+
+Arrows indicate the flow and interconnection of data between each stage, highlighting the sequential and modular nature of the system.
+
 \subsection{Computational Approaches for Sleep State Prediction}
 Common approaches for sleep state prediction using accelerometry data include:
 \begin{itemize}
-	\item \textbf{Threshold-based algorithms:} These use simple rules based on movement intensity to distinguish sleep from wake. For example, the Sadeh and Cole-Kripke algorithms are widely used in actigraphy-based sleep scoring~\cite{van2011review, sadeh2011}.
-	\item \textbf{Machine learning models:} Supervised classifiers such as random forests, support vector machines, and logistic regression are trained on labeled data to improve classification accuracy~\cite{van2011review, zhang2020machine, vanHees2015}.
-	\item \textbf{Deep learning:} Recurrent neural networks (RNNs), convolutional neural networks (CNNs), and hybrid models are increasingly used to capture temporal dependencies and complex patterns in accelerometry data~\cite{zhang2020machine, behar2013}.
+    \item \textbf{Threshold-based algorithms:} These use simple rules based on movement intensity to distinguish sleep from wake. For example, the Sadeh and Cole-Kripke algorithms are widely used in actigraphy-based sleep scoring~\cite{van2011review, sadeh2011}.
+    \item \textbf{Machine learning models:} Supervised classifiers such as random forests, support vector machines, and logistic regression are trained on labeled data to improve classification accuracy~\cite{van2011review, zhang2020machine, vanHees2015}.
+    \item \textbf{Deep learning:} Recurrent neural networks (RNNs), convolutional neural networks (CNNs), and hybrid models are increasingly used to capture temporal dependencies and complex patterns in accelerometry data~\cite{zhang2020machine, behar2013}.
 \end{itemize}
 
 The accuracy of these models depends on the quality of the input data, feature engineering, and the availability of ground truth labels, often derived from PSG. While accelerometer-based systems are effective for distinguishing sleep from wake, their ability to differentiate between specific sleep stages (e.g., REM vs. non-REM) is limited compared to PSG~\cite{pmc4883440, researchgate2021, kushida2001, griessenberger2013}.
 
 \subsection{Data Source}
-The primary data source is the accelerometer, which measures wrist movement in three axes. No environmental or physiological data (e.g., light, temperature, EEG) are available in this analysis. This limitation is common in wearable-based sleep monitoring systems~\cite{researchgate2021}.
+The primary data source is a wrist-worn accelerometer, which measures movement in three axes. The variables collected include ENMO, Anglez, step intervals, and timestamps. No environmental or physiological data (e.g., light, temperature, EEG) are available in this analysis, which is a common limitation in wearable-based sleep monitoring systems~\cite{researchgate2021}.
 
 \begin{figure}[h]
-	\centering
-	\includegraphics[width=0.3\linewidth]{figures/conceptual_model.png}
-	\caption{Conceptual model of sleep state classification using accelerometer data. The pipeline processes raw accelerometer signals through multiple stages: (A) Data acquisition from wrist-worn device, (B) Signal preprocessing and noise removal, (C) Feature extraction across time and frequency domains, (D) Classification using machine learning models, and (E) Prediction of sleep/wake states across time. \textit{Figure created using AI.}}
-	\label{fig:conceptual_model}
+    \centering
+    \includegraphics[width=\linewidth]{figures/conceptual_model.png}
+    \caption{Expanded conceptual model of sleep state classification using accelerometer data. The pipeline consists of: (A) Data Acquisition, collecting raw signals (ENMO, Anglez, step intervals, timestamps); (B) Data Processing, including calibration, normalization, filtering, and gap reduction; (C) Feature Extraction, where activity counts and time patterns are derived and events are tagged; (D) Classification, reducing data to sleep/wake states and generating the overall sleep sequence; and (E) Sleep State Prediction, where a predictive model estimates future sleep states and an evaluator validates prediction quality. Arrows indicate the sequential flow and interconnection of data between stages.}
+    \label{fig:conceptual_model}
 \end{figure}
 
 \subsection{Variables Analyzed}
 \begin{itemize}
-	\item \textbf{Wrist movement:} Intensity and temporal patterns of movement, as measured by the accelerometer.
-	\item \textbf{Movement speed:} Changes in velocity over time, derived from the raw acceleration data.
-	\item \textbf{Timestamp:} Used to sequence movement data and analyze temporal patterns. The timestamp is also useful for inferring environmental conditions, such as likely periods of darkness (nighttime), which are associated with sleep.
+    \item \textbf{Wrist movement:} Intensity and temporal patterns of movement, as measured by the accelerometer.
+    \item \textbf{Movement speed:} Changes in velocity over time, derived from the raw acceleration data.
+    \item \textbf{Timestamp:} Used to sequence movement data and analyze temporal patterns. The timestamp is also useful for inferring environmental conditions, such as likely periods of darkness (nighttime), which are associated with sleep.
 \end{itemize}
 
 Although brain activity at rest is a key indicator of sleep, it is not directly measured by accelerometers. Instead, periods of minimal movement are used as a proxy for sleep states~\cite{pmc5781106}. The absence of movement, especially during expected sleep periods, is interpreted as sleep, while increased activity is interpreted as wakefulness.
-
 \subsection{Polysomnography vs. Accelerometry}
 
 Polysomnography (PSG) is the gold standard for sleep assessment, providing comprehensive recordings of biophysiological changes during sleep~\cite{rechtschaffen1968, aasm2007}. PSG simultaneously monitors multiple parameters including EEG (brain activity), EOG (eye movements), EMG (muscle tone), ECG (heart rate), and respiratory parameters.
