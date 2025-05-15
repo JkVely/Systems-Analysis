@@ -62,13 +62,14 @@ Recent advances in wearable technology have enabled the use of accelerometers as
 
 The widespread availability of these devices has democratized access to sleep monitoring and motivated the development of sophisticated computational models to bridge the gap between consumer wearables and clinical assessment tools. This paper addresses the central question: \textit{How can accelerometer data be used to accurately predict sleep states?}
 
-\section{Theoretical Framework: Computational Models for Sleep State Prediction}
-
 Computational models for sleep state prediction from accelerometry data typically involve time series analysis, feature extraction, and classification algorithms. The underlying assumption is that movement patterns correlate with different sleep states: periods of low movement are associated with sleep, while increased activity indicates wakefulness~\cite{pmc4883440, researchgate2021, sadeh2011}. This approach is grounded in the established understanding of sleep physiology and regulation, such as the Two-Process Model proposed by Borbely~\cite{borbely1982}, which describes the interaction between homeostatic sleep drive (Process S) and circadian rhythm (Process C) in regulating sleep-wake cycles.
 
 Sleep state classification techniques have evolved from the manual scoring rules first proposed by Rechtschaffen and Kales in 1968~\cite{rechtschaffen1968}, which established standardized criteria for identifying sleep stages based on polysomnography recordings. These were later refined by the American Academy of Sleep Medicine (AASM)~\cite{aasm2007}, which introduced the current terminology of N1, N2, N3 (replacing stages 1-4), and REM sleep. While accelerometry lacks the neurophysiological signals needed for precise staging according to these criteria, computational approaches seek to approximate sleep state classification through movement pattern analysis.
 
-Common approaches include:
+\section{Methods and Materials}
+
+\subsection{Computational Approaches for Sleep State Prediction}
+Common approaches for sleep state prediction using accelerometry data include:
 \begin{itemize}
 	\item \textbf{Threshold-based algorithms:} These use simple rules based on movement intensity to distinguish sleep from wake. For example, the Sadeh and Cole-Kripke algorithms are widely used in actigraphy-based sleep scoring~\cite{van2011review, sadeh2011}.
 	\item \textbf{Machine learning models:} Supervised classifiers such as random forests, support vector machines, and logistic regression are trained on labeled data to improve classification accuracy~\cite{van2011review, zhang2020machine, vanHees2015}.
@@ -76,8 +77,6 @@ Common approaches include:
 \end{itemize}
 
 The accuracy of these models depends on the quality of the input data, feature engineering, and the availability of ground truth labels, often derived from PSG. While accelerometer-based systems are effective for distinguishing sleep from wake, their ability to differentiate between specific sleep stages (e.g., REM vs. non-REM) is limited compared to PSG~\cite{pmc4883440, researchgate2021, kushida2001, griessenberger2013}.
-
-\section{Methods and Materials: Systematic Analysis Using Accelerometry Data}
 
 \subsection{Data Source}
 The primary data source is the accelerometer, which measures wrist movement in three axes. No environmental or physiological data (e.g., light, temperature, EEG) are available in this analysis. This limitation is common in wearable-based sleep monitoring systems~\cite{researchgate2021}.
@@ -180,9 +179,7 @@ Data preprocessing includes:
 
 The feature extraction methodology follows established protocols in accelerometry-based sleep assessment, as recommended by the American Academy of Sleep Medicine~\cite{littner2003} and validated in comparative studies against polysomnography~\cite{kushida2001, sadeh2011}.
 
-\section{Implementation Approaches and Results from the Literature}
-
-This section summarizes key findings from the literature regarding the implementation and performance of various approaches to sleep state prediction using accelerometry data. Rather than presenting our own results, we highlight the achievements and limitations reported by other researchers in this field.
+\section{Results}
 
 \subsection{Established Model Implementations}
 \label{sec:model_implementation}
@@ -226,36 +223,7 @@ Based on published studies, several consistent challenges have been identified:
 
 These challenges identified in the literature inform our understanding of the limitations and opportunities in accelerometry-based sleep monitoring.
 
-\section{Discussion}
-
-The literature on accelerometer-based sleep state prediction shows promising avenues for large-scale and long-term sleep monitoring. This approach is consistently described as non-invasive, cost-effective, and suitable for use in both clinical and home settings~\cite{pmc4883440, researchgate2021, sadeh2011, littner2003}. Research findings suggest that advanced machine learning techniques, particularly sequence models like LSTMs, achieve the best accuracy in binary sleep/wake classification using only accelerometer data~\cite{zhang2020machine, behar2013}.
-
-The performance characteristics reported across multiple studies are encouraging. For instance, Kushida et al.~\cite{kushida2001} reported sensitivity values of 91-93\% for actigraphy compared to PSG. Similarly, Sadeh~\cite{sadeh2011} in a comprehensive review of actigraphy validation studies found Cohen's kappa values typically ranging from 0.6 to 0.8 when compared with PSG. These metrics indicate good overall agreement with the gold standard of polysomnography, particularly for detecting sleep states.
-
-However, several limitations are consistently noted in the literature. First, accelerometry alone cannot distinguish between all sleep stages (e.g., REM vs. non-REM) with high accuracy, and it may misclassify periods of quiet wakefulness as sleep. This limitation has been documented in studies by van Hees et al.~\cite{vanHees2015} and Griessenberger et al.~\cite{griessenberger2013}, which highlight the challenges of detecting quiet wake periods using accelerometry alone. Second, the absence of environmental and physiological data constrains the precision of accelerometry-based models. Most commercial sleep monitoring products using accelerometers lack validation against gold standard polysomnography~\cite{researchgate2021, behar2013}, leaving questions about their true accuracy.
-
-Despite these challenges, the consensus in the literature is that accelerometry remains a valuable tool for population studies and personal health monitoring, especially when combined with advanced computational models and contextual information. Ongoing research aims to improve the accuracy of sleep state prediction by integrating additional data sources and refining computational models~\cite{zhang2020machine, vanHees2015, behar2013}.
-
-\subsection{Limitations and Future Work}
-Based on the analysis of published research, several limitations affect all accelerometry-based sleep monitoring systems:
-
-\begin{itemize}
-	\item Accelerometry data alone may not be sufficient for distinguishing between all sleep stages, particularly in populations with sleep disorders or atypical movement patterns~\cite{griessenberger2013, sadeh2011}.
-	\item Individual differences in movement patterns during sleep significantly impact algorithm performance, suggesting the need for personalized approaches rather than one-size-fits-all algorithms~\cite{sadeh2011, kushida2001}.
-	\item Binary sleep/wake classification does not capture the full complexity of sleep architecture as defined in clinical settings using polysomnography~\cite{rechtschaffen1968, aasm2007}.
-	\item Data validation against polysomnography requires specialized equipment and expertise that limits widespread validation of consumer devices~\cite{littner2003, behar2013}.
-\end{itemize}
-
-The literature suggests several promising directions for future work:
-
-\begin{itemize}
-	\item Developing personalized models that adapt to individual movement patterns~\cite{sadeh2011, vanHees2015}
-	\item Investigating the integration of additional sensors (e.g., heart rate, temperature) to improve classification accuracy~\cite{behar2013, griessenberger2013}
-	\item Exploring multi-class classification approaches to distinguish between light sleep, deep sleep, and REM sleep~\cite{griessenberger2013}
-	\item Investigating unsupervised or semi-supervised learning techniques to reduce dependency on labeled polysomnography data~\cite{zhang2020machine}
-\end{itemize}
-
-\section{Systematic Approach to Sleep State Analysis}
+\subsection{Systematic Approach to Sleep State Analysis}
 
 Our systematic approach to analyzing sleep states using accelerometry data integrates both the conceptual understanding of sleep as a dynamic system and a practical processing framework for implementation.
 
@@ -286,9 +254,15 @@ In pediatric populations, several unique considerations affect algorithm perform
 
 These insights inform our feature selection and model training, optimizing algorithm performance for different developmental stages as recommended by the American Academy of Sleep Medicine~\cite{littner2003, sadeh2011}.
 
-\section{Conclusion}
+\section{Conclusions}
 
-%TODO: Conclusion
+The literature on accelerometer-based sleep state prediction shows promising avenues for large-scale and long-term sleep monitoring. This approach is consistently described as non-invasive, cost-effective, and suitable for use in both clinical and home settings~\cite{pmc4883440, researchgate2021, sadeh2011, littner2003}. Research findings suggest that advanced machine learning techniques, particularly sequence models like LSTMs, achieve the best accuracy in binary sleep/wake classification using only accelerometer data~\cite{zhang2020machine, behar2013}.
+
+The performance characteristics reported across multiple studies are encouraging. For instance, Kushida et al.~\cite{kushida2001} reported sensitivity values of 91-93\% for actigraphy compared to PSG. Similarly, Sadeh~\cite{sadeh2011} in a comprehensive review of actigraphy validation studies found Cohen's kappa values typically ranging from 0.6 to 0.8 when compared with PSG. These metrics indicate good overall agreement with the gold standard of polysomnography, particularly for detecting sleep states.
+
+However, several limitations are consistently noted in the literature. First, accelerometry alone cannot distinguish between all sleep stages (e.g., REM vs. non-REM) with high accuracy, and it may misclassify periods of quiet wakefulness as sleep. This limitation has been documented in studies by van Hees et al.~\cite{vanHees2015} and Griessenberger et al.~\cite{griessenberger2013}, which highlight the challenges of detecting quiet wake periods using accelerometry alone. Second, the absence of environmental and physiological data constrains the precision of accelerometry-based models. Most commercial sleep monitoring products using accelerometers lack validation against gold standard polysomnography~\cite{researchgate2021, behar2013}, leaving questions about their true accuracy.
+
+Despite these challenges, the consensus in the literature is that accelerometry remains a valuable tool for population studies and personal health monitoring, especially when combined with advanced computational models and contextual information. Ongoing research aims to improve the accuracy of sleep state prediction by integrating additional data sources and refining computational models~\cite{zhang2020machine, vanHees2015, behar2013}.
 
 % Usando BibTeX para gestionar las referencias
 \bibliographystyle{IEEEtran}
