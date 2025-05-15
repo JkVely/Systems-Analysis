@@ -212,6 +212,9 @@ cython_debug/
 # VS Code
 .vscode/
 
+# Drawio
+*.drawio
+
 # OS generated files #
 ######################
 .DS_Store

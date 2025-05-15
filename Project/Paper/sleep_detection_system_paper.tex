@@ -225,20 +225,79 @@ These challenges identified in the literature inform our understanding of the li
 
 \subsection{Systematic Approach to Sleep State Analysis}
 
-Our systematic approach to analyzing sleep states using accelerometry data integrates both the conceptual understanding of sleep as a dynamic system and a practical processing framework for implementation.
+Our systematic approach to analyzing sleep states presents a comparative framework between the gold standard polysomnography (PSG) and the more accessible accelerometry method, while detailing the processing pipeline for accelerometry-based sleep classification.
+
+\subsubsection{Comparative Framework: PSG vs. Accelerometry}
+
+Sleep state classification methodologies can be broadly categorized into laboratory-based polysomnography and wearable-based accelerometry approaches, each with distinctive characteristics:
+
+\begin{table}[h]
+	\caption{Comparative Analysis of PSG and Accelerometry-Based Sleep Classification}
+	\label{tab:psg_vs_accelerometry}
+	\resizebox{\linewidth}{!}{%
+		\begin{tabular}{|p{2.5cm}|p{6cm}|p{6cm}|}
+			\hline
+			\textbf{Parameter} & \textbf{Polysomnography (PSG)} & \textbf{Accelerometry} \\
+			\hline
+			Data Acquisition & Multiple physiological signals: EEG, EOG, EMG, ECG, respiratory sensors & Single sensor: 3-axis accelerometer measuring movement intensity \\
+			\hline
+			Signal Processing & Channel-specific filtering, artifact removal (blinking, movement), signal synchronization & Low-pass filtering, noise removal, signal normalization, missing data handling \\
+			\hline
+			Feature Extraction & Spectral power bands, eye movement patterns, muscle tone measurements, cardiorespiratory features & Activity counts, movement variability, zero-crossing frequency, temporal patterns \\
+			\hline
+			Classification Method & AASM scoring manual, 30-second epochs, expert human scoring, rule-based classification & Threshold-based algorithms, machine learning models, deep learning (LSTM, CNN) \\
+			\hline
+			Sleep States Detected & Wake (W), N1 (light sleep), N2 (intermediate), N3 (deep sleep), REM sleep & Wake, Sleep (sometimes divided into light and deep sleep) \\
+			\hline
+			Performance Metrics & Inter-scorer reliability, gold standard accuracy, comprehensive sleep architecture & Accuracy (82-93\%), Sensitivity (87-95\%), Specificity (50-83\%), Cohen's kappa (0.55-0.80) \\
+			\hline
+			Limitations & Expensive equipment, laboratory environment, invasive sensors, limited monitoring duration & Limited sleep stage discrimination, poor detection of wake periods, transition period inaccuracies \\
+			\hline
+		\end{tabular}%
+	}
+\end{table}
+
+This comparative framework illustrates the complementary nature of these methodologies; PSG provides detailed sleep staging information but with practical limitations, while accelerometry offers accessible long-term monitoring with reduced granularity.
+
+\subsection{System Architecture}
+
+The general architecture of the sleep state detection system is depicted in Figure~\ref{fig:system-diagram}. The system integrates data from both Polysomnography (PSG) and Accelerometers to determine sleep states.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/sleep_system_diagram.png}
+    \caption{System diagram for sleep state prediction using accelerometry and PSG data. The diagram illustrates the flow of data from various inputs (sensors, fatigue level, light level) through the system components (Human Body, Heart, Wrist, Brain, Eyes, PSG, Accelerometers) to the final outputs (Sleep State, Sleep Period, Sleep Efficiency) via a classification method.}
+    \label{fig:system-diagram}
+\end{figure}
+
+\subsubsection{Data Acquisition}
+
+The system acquires data from two primary sources:
+
+\begin{itemize}
+	\item \textbf{Polysomnography (PSG):} PSG captures detailed physiological signals, including EEG (brain activity), EOG (eye movements), EMG (muscle activity), and ECG (heart rate). These signals provide a comprehensive view of sleep architecture.
+	\item \textbf{Accelerometers:} Accelerometers measure wrist movement, providing data on activity levels and patterns. From this data, features such as \textit{Anglez} (wrist angle relative to the body's vertical axis) and \textit{Enmo} (angular velocity calculated for each timestamp) are derived.
+\end{itemize}
+
+\subsubsection{Sleep State Classification}
+
+The data from PSG and Accelerometers is then fed into a "Classification method". This method, which could be a rule-based system or a machine learning algorithm, combines the information to determine the sleep state. The "Classification method" defines the "Sleep State", estimates the "Sleep Period", and calculates the "Sleep Efficiency".
+
+This architecture allows the system to leverage the detailed physiological data from PSG and the movement data from Accelerometers to provide a comprehensive assessment of sleep.
+\subsubsection{Accelerometry Processing Pipeline}
 
 Sleep is conceptualized as a dynamic system with inputs (environmental factors, circadian rhythms, homeostatic sleep drive), processes (neurological mechanisms), and outputs (observable sleep states)~\cite{carskadon2005normal, borbely1982}. The Two-Process Model by Borbely~\cite{borbely1982} provides the theoretical foundation, describing how homeostatic sleep pressure interacts with circadian rhythm to regulate sleep.
 
 Our implementation follows a hierarchical framework:
 \begin{itemize}
-	\item \textbf{Signal processing:} Data acquisition, noise filtering, and preprocessing~\cite{ancoli2003role, vanHees2015}
-	\item \textbf{Feature extraction:} Time-domain, frequency-domain, and statistical features~\cite{sadeh1994activity, kushida2001}
-	\item \textbf{Pattern recognition:} Statistical models and machine learning algorithms~\cite{zhang2020machine, behar2013}
-	\item \textbf{State classification:} Temporal context and movement characteristics~\cite{rechtschaffen1968, littner2003}
-	\item \textbf{Validation:} Comparison with ground truth data and cross-validation~\cite{kushida2001, sadeh2011}
+	\item \textbf{Signal processing:} Data acquisition from wearable devices, noise filtering, and preprocessing~\cite{ancoli2003role, vanHees2015}
+	\item \textbf{Feature extraction:} Time-domain features (activity counts), frequency-domain features (spectral components), and statistical features (variability measures)~\cite{sadeh1994activity, kushida2001}
+	\item \textbf{Pattern recognition:} Application of statistical models and machine learning algorithms to identify sleep-related patterns~\cite{zhang2020machine, behar2013}
+	\item \textbf{State classification:} Utilizing temporal context and movement characteristics to categorize sleep/wake states~\cite{rechtschaffen1968, littner2003}
+	\item \textbf{Validation:} Comparison with PSG ground truth data and cross-validation techniques to assess model performance~\cite{kushida2001, sadeh2011}
 \end{itemize}
 
-This approach integrates clinical sleep research methodologies~\cite{aasm2007, littner2003} with modern computational techniques~\cite{zhang2020machine, behar2013}, facilitating systematic improvement at each level.
+This approach integrates clinical sleep research methodologies~\cite{aasm2007, littner2003} with modern computational techniques~\cite{zhang2020machine, behar2013}, facilitating systematic improvement at each level while acknowledging the inherent limitations compared to PSG-based classification.
 
 \subsection{Sleep Transitions and Population-Specific Considerations}
 
