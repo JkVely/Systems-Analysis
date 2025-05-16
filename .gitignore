@@ -12,6 +12,9 @@ __pycache__/
 *.fls
 *.log
 *.synctex.gz
+*.out
+*.bbl
+*.blg
 
 # Distribution / packaging
 .Python
@@ -182,6 +185,7 @@ cython_debug/
 # Archives
 *.pdf
 !/Workshop*/**/*.pdf
+!/project/**/*.pdf
 *.txt
 
 #Latex
@@ -207,6 +211,9 @@ cython_debug/
 
 # VS Code
 .vscode/
+
+# Drawio
+*.drawio
 
 # OS generated files #
 ######################
