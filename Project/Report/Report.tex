@@ -7,6 +7,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{float}
+\usepackage{graphicx}
 
 \floatstyle{boxed} 
 \restylefloat{figure}
@@ -71,6 +72,14 @@ The proposed model adheres to a meticulously structured five-stage processing pi
 	      \end{itemize}
 \end{itemize}
 \subsection{Processing Pipeline}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{conceptual_model.png}
+    \caption{Expanded conceptual model of sleep state classification using accelerometer data. ...}
+    \label{fig:conceptual_model}
+\end{figure}
+
 \begin{itemize}
 	\item \textbf{Acquisition:}
 	      Capture of raw triaxial accelerometric signals.
@@ -216,13 +225,14 @@ The use of accelerometry promises to be non-invasive and cost-effective; however
 \section{Conclusions: }
     
     \begin{itemize}
-		\item Accelerometers are valid tools for binary sleep/wake classification, with accuracy comparable to PSG in this area. (>90\% in advanced models).
-		\item They do not replace PSG in medical applications that require detailed sleep stages, such as diagnosing narcolepsy or severe sleep apnea. 
+		\item Accelerometers are valid tools for binary sleep/wake classification, with accuracy comparable to PSG in this area. (90\% in advanced models).
         \item \textbf{Future directions:} 
         \begin{itemize}
-		      \item \textbf{Hybrid Models:} Combining accelerometry with heart rate or temperature sensors to approximate performance to that of PSG.
-		      \item \textbf{Personalization:}Train algorithms with individual data to reduce errors due to variability.
-                \item \textbf{Clinical applications:} Clinical validation for the commercialization of wearables for public use, so that they can be used to diagnose insomnia, sleep apnea, or monitor treatments or medications that affect sleep quality.
+		      \item \textbf{Hybrid Models:} Combining accelerometry with multimodal biometrics like PPG for heart rate variability or temperature sensors to approximate performance to that of PSG. Early studies suggest hybrid systems could achieve 80-85\% accuracy in N3 and REM identification.
+                \item \textbf{Hybrid architectures:} Hybrid architectures that fuse LSTM and CNN show potential in addressing transitional ambiguity. However micro wakings detection remains an unsolved challenge.
+		      \item \textbf{Personalization:} There is a need to train algorithms with individual data to reduce errors because of variability, due to a reduce in performance in atypical populations (5-15\% accuracy loss in children).
+                \item \textbf{Clinical Applications:} Clinical validation for the commercialization of wearables for public use, so that they can be used to diagnose insomnia, sleep apnea, or monitor treatments or medications that affect sleep quality.
+                \item \textbf{Clinical Limitations:} Accelerometry remains insufficient for diagnosing complex sleep disorders that require a detailed analysis of the stages such as narcolepsy, REM sleep behavior disorder, circadian rhythm disturbances. Polysomnography (PSG) remains irreplaceable in neurology and sleep medicine despite its disadvantages.
 	      \end{itemize}
 	\end{itemize}
 
