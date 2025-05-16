@@ -182,6 +182,7 @@ cython_debug/
 # Archives
 *.pdf
 !/Workshop*/**/*.pdf
+!/Project*/**/*.pdf
 *.txt
 
 #Latex
