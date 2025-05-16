@@ -18,13 +18,16 @@ In this course, we will learn comprehensive systems analysis and design methodol
 
 ```md
 Systems-Analysis/
-├── README.md                  # Main documentation
-├── Project/                   # Final project directory
-│   └── Paper/                 # IEEE paper on sleep state detection
-│       └── sleep_detection_system_paper.tex  # Main LaTeX file
-└── Workshop/                  # Workshop directory
-    ├── Workshop1/             # First workshop: System Analysis
-    └── Workshop_2_Design/     # Second workshop: System Design
+│
+├── Project/
+│   ├── Paper/                # IEEE paper on sleep state detection
+│   └── Poster/               # Project poster presentation materials
+│
+├── Workshop/
+│   ├── Workshop1/            # First workshop: System Analysis
+│   └── Workshop_2_Design/    # Second workshop: System Design
+│
+└── README.md                 # Main repository documentation
 ```
 
 ## 🚀 Workshops
