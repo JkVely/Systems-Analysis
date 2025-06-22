@@ -16,20 +16,184 @@ Este simulador reproduce la dinámica de sueño y vigilia usando variables ambie
 ## Organización y cálculo de las variaciones
 
 - Cada variable ambiental (luz, sonido, estrés) se actualiza en cada paso con una variación gaussiana (ruido blanco). Cada 12 pasos, luz y sonido pueden cambiar abruptamente para simular eventos reales (apagar/encender luz, abrir ventana, etc.).
-- La probabilidad de movimiento se calcula usando una regresión logística sobre los estímulos y el estado previo de sueño:
+
+### Fórmulas de probabilidad detalladas
+
+#### 1. Probabilidad de movimiento (modelo de regresión logística)
+
+La probabilidad de que ocurra un movimiento voluntario o involuntario se calcula mediante:
 
 $$
 P_{move} = \sigma(\beta_0 + \beta_{luz} \cdot luz + \beta_{sonido} \cdot sonido + \beta_{estrés} \cdot estrés + \beta_{dormido} \cdot I_{dormido})
 $$
 
-- Si ocurre movimiento (según $P_{move}$), se simulan ENMO y Anglez con las distribuciones mencionadas.
-- La probabilidad de estar dormido se calcula con un modelo tipo Sadeh modificado:
+**Donde:**
+- **σ (sigma)** = Función sigmoide/logística: $\sigma(x) = \frac{1}{1 + e^{-x}}$, que convierte cualquier valor real en una probabilidad entre 0 y 1
+- **β (beta)** = Coeficientes de regresión logística (pesos) que determinan la influencia de cada variable:
+  - **β₀ = -1.5** (intercepto base): probabilidad basal de movimiento cuando todas las variables son 0
+  - **β_luz = -0.6**: la luz reduce la probabilidad de movimiento (facilita el sueño)
+  - **β_sonido = 0.4**: el sonido aumenta la probabilidad de movimiento (arousal/activación)
+  - **β_estrés = 0.8**: el estrés aumenta significativamente la probabilidad de movimiento
+  - **β_dormido = -1.8**: estar dormido reduce drásticamente la probabilidad de movimiento
+- **I_dormido** = Variable indicadora (0 si despierto, 1 si dormido en el paso anterior)
+- **luz, sonido, estrés** = Variables normalizadas entre 0 y 1
+
+**¿Cómo se obtiene la probabilidad?**
+1. Se multiplica cada variable por su coeficiente β correspondiente
+2. Se suman todos los productos más el intercepto β₀
+3. Se aplica la función sigmoide σ para obtener una probabilidad entre 0 y 1
+4. Se compara esta probabilidad con un número aleatorio uniforme [0,1] para decidir si ocurre movimiento
+
+#### 2. Probabilidad de estar dormido (modelo Sadeh modificado)
+
+La probabilidad de estar dormido se calcula mediante:
 
 $$
 P_{sleep} = \sigma(\alpha_0 + \alpha_{actividad} \cdot actividad + \alpha_{luz} \cdot luz + \alpha_{sonido} \cdot sonido + \alpha_{estrés} \cdot estrés)
 $$
 
-Donde **actividad** es el valor de ENMO normalizado o el valor manual del slider.
+**Donde:**
+- **σ (sigma)** = Misma función sigmoide que antes: $\sigma(x) = \frac{1}{1 + e^{-x}}$
+- **α (alfa)** = Coeficientes del algoritmo Sadeh modificado:
+  - **α₀ = 2.1** (intercepto positivo): favorece el estado de sueño como estado basal
+  - **α_actividad = -1.2**: alta actividad reduce la probabilidad de estar dormido
+  - **α_luz = -0.8**: la luz reduce la probabilidad de estar dormido
+  - **α_sonido = -0.5**: el ruido reduce la probabilidad de estar dormido
+  - **α_estrés = -0.9**: el estrés reduce la probabilidad de estar dormido
+- **actividad** = Valor de ENMO normalizado [0,1] o valor manual del slider de actividad física
+
+**¿Cómo se obtiene la probabilidad?**
+1. Se calcula el "Sadeh Score" (PS): PS = α₀ + Σ(αᵢ × variableᵢ)
+2. Se aplica la función sigmoide σ(PS) para convertir el score en probabilidad [0,1]
+3. En el algoritmo Sadeh original: PS ≥ 0 indica sueño, PS < 0 indica vigilia
+4. Aquí se usa la versión probabilística σ(PS) para obtener valores continuos
+
+#### 3. Justificación de los coeficientes
+
+Los valores de β y α están basados en:
+- **Literatura científica validada** sobre actigrafía y modelos de sueño (ver bibliografía)
+- **Calibración empírica** para reproducir patrones fisiológicos realistas
+- **Competencia Kaggle Child Mind Institute** - Detect Sleep States
+- **Principios fisiológicos**: luz y ruido como inhibidores del sueño, estrés como activador
+
+#### 4. Explicación intuitiva de las funciones matemáticas
+
+**¿Qué significa σ (sigma)?**
+- Es una función matemática que "aplasta" cualquier número (positivo o negativo) a un rango entre 0 y 1
+- Imagínala como un "filtro" que convierte puntuaciones en probabilidades
+- Si el número es muy negativo (-∞): σ → 0 (probabilidad muy baja)
+- Si el número es cero: σ → 0.5 (probabilidad neutral, 50%)
+- Si el número es muy positivo (+∞): σ → 1 (probabilidad muy alta)
+
+**¿Qué significan β (beta) y α (alfa)?**
+- Son "pesos" o "multiplicadores" que determinan qué tan importante es cada variable
+- Un β/α **negativo** significa que la variable **reduce** la probabilidad
+- Un β/α **positivo** significa que la variable **aumenta** la probabilidad
+- Un valor más **grande** (en valor absoluto) significa mayor influencia
+
+**Ejemplo práctico:**
+- β_luz = -0.6: Cuando hay mucha luz, la probabilidad de movimiento baja (porque facilita el sueño)
+- β_sonido = 0.4: Cuando hay mucho sonido, la probabilidad de movimiento sube (porque activa/despierta)
+- β_estrés = 0.8: El estrés tiene un efecto grande y positivo en el movimiento
+- α_actividad = -1.2: Mucha actividad física reduce fuertemente la probabilidad de estar dormido
+
+**¿Cómo funciona en conjunto?**
+1. Se multiplica cada variable por su peso (β o α)
+2. Se suman todos los resultados + un valor base (intercepto)
+3. Se aplica σ para obtener una probabilidad entre 0% y 100%
+4. Se lanza una "moneda virtual" con esa probabilidad para decidir qué ocurre
+
+#### 5. Ejemplos numéricos de cálculo
+
+**Ejemplo 1: Ambiente silencioso y oscuro (noche)**
+```
+luz = 0.1, sonido = 0.2, estrés = 0.3, dormido_anterior = 1
+
+Cálculo P_movimiento:
+suma = -1.5 + (-0.6×0.1) + (0.4×0.2) + (0.8×0.3) + (-1.8×1)
+suma = -1.5 - 0.06 + 0.08 + 0.24 - 1.8 = -3.04
+P_movimiento = σ(-3.04) = 1/(1+e^3.04) ≈ 0.046 = 4.6%
+→ Muy baja probabilidad de movimiento (persona dormida)
+```
+
+**Ejemplo 2: Ambiente ruidoso y luminoso (día)**
+```
+luz = 0.8, sonido = 0.7, estrés = 0.5, dormido_anterior = 0
+
+Cálculo P_movimiento:
+suma = -1.5 + (-0.6×0.8) + (0.4×0.7) + (0.8×0.5) + (-1.8×0)
+suma = -1.5 - 0.48 + 0.28 + 0.4 + 0 = -1.3
+P_movimiento = σ(-1.3) = 1/(1+e^1.3) ≈ 0.214 = 21.4%
+→ Probabilidad moderada de movimiento (persona despierta pero tranquila)
+```
+
+**Ejemplo 3: Alta actividad y estrés**
+```
+actividad = 0.6, luz = 0.5, sonido = 0.4, estrés = 0.8
+
+Cálculo P_sueño:
+suma = 2.1 + (-1.2×0.6) + (-0.8×0.5) + (-0.5×0.4) + (-0.9×0.8)
+suma = 2.1 - 0.72 - 0.4 - 0.2 - 0.72 = 0.06
+P_sueño = σ(0.06) = 1/(1+e^-0.06) ≈ 0.515 = 51.5%
+→ Probabilidad neutral de estar dormido (zona de transición)
+```
+
+Esta simulación permite explorar cómo diferentes combinaciones de variables ambientales y fisiológicas afectan las probabilidades de movimiento y sueño en tiempo real.
+
+- Si ocurre movimiento (según $P_{move}$), se simulan ENMO y Anglez con las distribuciones mencionadas.
+
+### Proceso completo de obtención de datos de probabilidad
+
+Para clarificar completamente cómo se obtienen las probabilidades, aquí está el proceso paso a paso:
+
+**1. Entradas del sistema:**
+- Variables ambientales: luz [0-1000 lux] → normalizada a [0-1]
+- Sonido [20-80 dB] → normalizada a [0-1]  
+- Estrés [0-10] → normalizada a [0-1]
+- Estado previo de sueño [0 o 1]
+- Actividad física manual [0-1] (si está habilitada)
+
+**2. Cálculo de probabilidad de movimiento:**
+```
+suma_movimiento = -1.5 + (-0.6 × luz) + (0.4 × sonido) + (0.8 × estrés) + (-1.8 × dormido_anterior)
+P_movimiento = 1 / (1 + e^(-suma_movimiento))
+```
+
+**3. Decisión estocástica de movimiento:**
+```
+número_aleatorio = random.uniform(0, 1)
+ocurre_movimiento = (número_aleatorio < P_movimiento)
+```
+
+**4. Generación de ENMO y Anglez (consecuencias del movimiento):**
+```
+si ocurre_movimiento:
+    ENMO = normal(media=0.13, desviación=0.04) truncada a [0.05, 0.25] g
+    Anglez = uniforme(10, 60) grados
+sino:
+    ENMO = normal(media=0.025, desviación=0.01) truncada a [0.01, 0.05] g  
+    Anglez = uniforme(0, 5) grados
+```
+
+**5. Cálculo de probabilidad de sueño:**
+```
+actividad = ENMO_normalizado (0-1) o valor_manual_slider
+suma_sueño = 2.1 + (-1.2 × actividad) + (-0.8 × luz) + (-0.5 × sonido) + (-0.9 × estrés)
+P_sueño = 1 / (1 + e^(-suma_sueño))
+```
+
+**6. Decisión estocástica de sueño:**
+```
+número_aleatorio2 = random.uniform(0, 1)
+está_dormido = (número_aleatorio2 < P_sueño)
+```
+
+**7. Visualización:**
+- Se grafican las probabilidades calculadas (líneas continuas)
+- Se grafican los valores de ENMO y Anglez generados (como consecuencias)
+- Se muestra el umbral dinámico como línea punteada
+
+Este proceso se repite cada paso de simulación (cada 30 segundos simulados), donde las variables ambientales cambian ligeramente por ruido gaussiano, y cada 12 pasos pueden ocurrir cambios abruptos en luz y sonido.
 
 ## Cálculos estocásticos y caos
 

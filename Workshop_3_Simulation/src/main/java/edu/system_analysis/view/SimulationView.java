@@ -119,6 +119,11 @@ public class SimulationView extends Application {
         tabAnglez.setClosable(false);
         tabPane.getTabs().addAll(tabProb, tabEnmo, tabAnglez);
 
+        // Soporte de zoom horizontal con la rueda del mouse en cada gráfico
+        addZoomOnScroll(chartProb);
+        addZoomOnScroll(chartEnmo);
+        addZoomOnScroll(chartAnglez);
+
         // Listeners y acciones
         luzSlider.valueProperty().addListener((obs, oldVal, newVal) -> { luzValue.setText(String.format("%.0f lux", newVal.doubleValue())); actualizarValoresBase(); });
         sonidoSlider.valueProperty().addListener((obs, oldVal, newVal) -> { sonidoValue.setText(String.format("%.0f dB", newVal.doubleValue())); actualizarValoresBase(); });
@@ -199,6 +204,22 @@ public class SimulationView extends Application {
         slider.setPrefWidth(180);
         box.getChildren().addAll(l, slider, valueLabel);
         return box;
+    }
+
+    // Permite hacer zoom horizontal con la rueda del mouse en el eje X
+    private void addZoomOnScroll(LineChart<Number, Number> chart) {
+        NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        chart.setOnScroll(event -> {
+            double deltaY = event.getDeltaY();
+            double lower = xAxis.getLowerBound();
+            double upper = xAxis.getUpperBound();
+            double range = upper - lower;
+            double factor = (deltaY > 0) ? 0.8 : 1.25; // acercar o alejar
+            double newRange = Math.max(5, range * factor);
+            double center = (lower + upper) / 2.0;
+            xAxis.setLowerBound(center - newRange / 2.0);
+            xAxis.setUpperBound(center + newRange / 2.0);
+        });
     }
 
     public static void main(String[] args) {
