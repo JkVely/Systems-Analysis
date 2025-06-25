@@ -67,7 +67,7 @@ public class SimulationController {
         this.enmoBase = enmo;
         this.anglezBase = anglez;
     }
-
+    //TODO: REVisa 
     private double nextGaussian(double base, double std, double min, double max) {
         double val = base + std * java.util.concurrent.ThreadLocalRandom.current().nextGaussian();
         return Math.max(min, Math.min(max, val));
