@@ -27,6 +27,7 @@ public class SimulationView extends Application {
     private final Label umbralValue = new Label();
     private final Label enmoValue = new Label();
     private final Label anglezValue = new Label();
+    private final Label periodoCircadianoValue = new Label();
 
     // Sliders como atributos para acceso global
     private final Slider luzSlider = crearSlider(0, 1000, 10); // lux
@@ -34,6 +35,8 @@ public class SimulationView extends Application {
     private final Slider estresSlider = crearSlider(0, 10, 2); // escala 0-10
     private final Slider actividadSlider = crearSlider(0, 1, 0.1); // Actividad física normalizada (0-1)
     private final Button autoBtn = new Button("Auto 12 pasos");
+    private final Button simularBtn = new Button("Simular Paso");
+    private final Button resetBtn = new Button("Reiniciar");
     private final XYChart.Series<Number, Number> enmoSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> anglezSeries = new XYChart.Series<>();
     private final XYChart.Series<Number, Number> umbralSeries = new XYChart.Series<>();
@@ -44,46 +47,49 @@ public class SimulationView extends Application {
         VBox root = new VBox(15);
         root.setPadding(new Insets(20));
 
-        // Controles de entrada mejorados
-        VBox inputBox = new VBox(10);
-        HBox slidersBox = new HBox(20);
-        VBox luzBox = crearSliderBox("Luz (lux)", luzSlider, luzValue);
-        VBox sonidoBox = crearSliderBox("Sonido (dB)", sonidoSlider, sonidoValue);
+        // --- INTERFAZ MINIMALISTA Y LIMPIA ---
+        // Controles compactos
+        VBox inputBox = new VBox(6);
+        HBox slidersBox = new HBox(12);
+        VBox luzBox = crearSliderBox("Luz", luzSlider, luzValue);
+        VBox sonidoBox = crearSliderBox("Sonido", sonidoSlider, sonidoValue);
         VBox estresBox = crearSliderBox("Estrés", estresSlider, estresValue);
-        VBox actividadBox = crearSliderBox("Actividad física (proxy ENMO)", actividadSlider, actividadSliderValue);
+        VBox actividadBox = crearSliderBox("Actividad", actividadSlider, actividadSliderValue);
         slidersBox.getChildren().addAll(luzBox, sonidoBox, estresBox, actividadBox);
-        inputBox.getChildren().addAll(new Label("Ajusta los estímulos para la simulación:"), slidersBox);
-        HBox umbralBox = new HBox(10, new Label("Umbral dinámico actual:"), umbralValue);
-        inputBox.getChildren().add(umbralBox);
-        HBox resultadoBox = new HBox(20,
-            new Label("ENMO actual (g):"), enmoValue,
-            new Label("Anglez actual (°):"), anglezValue
+        inputBox.getChildren().add(slidersBox);
+        HBox resultadoBox = new HBox(16,
+            new Label("ENMO:"), enmoValue,
+            new Label("Anglez:"), anglezValue,
+            new Label("Umbral:"), umbralValue
         );
         inputBox.getChildren().add(resultadoBox);
-
-        // Botones
-        Button simularBtn = new Button("Simular Paso");
-        Button autoBtn = new Button("Auto 12 pasos");
-        Button resetBtn = new Button("Reiniciar");
-        HBox buttonBox = new HBox(10, simularBtn, autoBtn, resetBtn);
+        HBox circadianoBox = new HBox(10,
+            new Label("Período Circadiano:"), periodoCircadianoValue
+        );
+        inputBox.getChildren().add(circadianoBox);
+        // Botones compactos
+        HBox buttonBox = new HBox(8, simularBtn, autoBtn, resetBtn);
 
         // Gráfica de probabilidad de movimiento y probabilidad de estar dormido
         NumberAxis xAxis = new NumberAxis();
         xAxis.setLabel("Paso");
         NumberAxis yAxis = new NumberAxis(0, 1, 0.1);
-        yAxis.setLabel("Probabilidad");
+        yAxis.setLabel("");
         LineChart<Number, Number> chartProb = new LineChart<>(xAxis, yAxis);
-        chartProb.setTitle("Evolución de la Probabilidad de Movimiento y de Estar Dormido");
+        chartProb.setTitle("");
         chartProb.setLegendVisible(true);
         chartProb.setAnimated(false);
         probSeries.setName("Probabilidad de Movimiento");
         dormidoSeries.setName("Probabilidad de Estar Dormido");
-        umbralSeries.setName("Umbral dinámico");
+        umbralSeries.setName("Umbral dinámico (límite sueño/vigilia)");
         chartProb.getData().addAll(probSeries, dormidoSeries, umbralSeries);
-        // Solo el umbral debe ser línea punteada y sin puntos
-        umbralSeries.getNode().lookup(".chart-series-line").setStyle("-fx-stroke-dash-array: 8 8; -fx-stroke-width: 2; -fx-stroke: #888;");
-        // Ocultar los puntos del umbral
-        umbralSeries.getNode().lookupAll(".chart-line-symbol").forEach(n -> n.setStyle("-fx-background-color: transparent; -fx-shape: none;"));
+        // Aplicar estilos después de que la escena esté lista
+        chartProb.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                umbralSeries.getNode().lookup(".chart-series-line").setStyle("-fx-stroke-dash-array: 8 8; -fx-stroke-width: 2; -fx-stroke: #888;");
+                umbralSeries.getNode().lookupAll(".chart-line-symbol").forEach(n -> n.setStyle("-fx-background-color: transparent; -fx-shape: none;"));
+            }
+        });
 
         // Gráfica de ENMO
         NumberAxis xAxisEnmo = new NumberAxis();
@@ -97,10 +103,10 @@ public class SimulationView extends Application {
         enmoSeries.setName("ENMO (g)");
         chartEnmo.getData().add(enmoSeries);
 
-        // Gráfica de Anglez
+        // Gráfica de Anglez (rango correcto -90 a 90)
         NumberAxis xAxisAnglez = new NumberAxis();
         xAxisAnglez.setLabel("Paso");
-        NumberAxis yAxisAnglez = new NumberAxis(0, 180, 20);
+        NumberAxis yAxisAnglez = new NumberAxis(-90, 90, 30);
         yAxisAnglez.setLabel("Anglez (°)");
         LineChart<Number, Number> chartAnglez = new LineChart<>(xAxisAnglez, yAxisAnglez);
         chartAnglez.setTitle("Evolución de Anglez");
@@ -119,10 +125,18 @@ public class SimulationView extends Application {
         tabAnglez.setClosable(false);
         tabPane.getTabs().addAll(tabProb, tabEnmo, tabAnglez);
 
-        // Soporte de zoom horizontal con la rueda del mouse en cada gráfico
-        addZoomOnScroll(chartProb);
-        addZoomOnScroll(chartEnmo);
-        addZoomOnScroll(chartAnglez);
+        // Soporte de zoom solo cuando la gráfica está visible (tab seleccionada)
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab == tabProb) {
+                addZoomBothAxes(chartProb);
+            } else if (newTab == tabEnmo) {
+                addZoomBothAxes(chartEnmo);
+            } else if (newTab == tabAnglez) {
+                addZoomBothAxes(chartAnglez);
+            }
+        });
+        // Inicializar zoom en la pestaña activa al inicio
+        addZoomBothAxes(chartProb);
 
         // Listeners y acciones
         luzSlider.valueProperty().addListener((obs, oldVal, newVal) -> { luzValue.setText(String.format("%.0f lux", newVal.doubleValue())); actualizarValoresBase(); });
@@ -139,6 +153,8 @@ public class SimulationView extends Application {
         umbralValue.setText(String.format("%.2f", controller.getLastUmbral()));
         enmoValue.setText(String.format("%.3f", controller.getEnmoActual()));
         anglezValue.setText(String.format("%.0f", controller.getAnglezActual()));
+        periodoCircadianoValue.setText(controller.getNombrePeriodoCircadiano());
+        periodoCircadianoValue.setStyle("-fx-font-weight: bold; -fx-text-fill: #2e8b57;");
 
         simularBtn.setOnAction(e -> {
             double prob = controller.simularPaso();
@@ -156,6 +172,7 @@ public class SimulationView extends Application {
             enmoValue.setText(String.format("%.3f", controller.getEnmoActual()));
             anglezValue.setText(String.format("%.0f", controller.getAnglezActual()));
             actividadSliderValue.setText(String.format("%.2f", controller.getActividadActual()));
+            periodoCircadianoValue.setText(controller.getNombrePeriodoCircadiano());
         });
         autoBtn.setOnAction(e -> {
             for (int i = 0; i < 12; i++) simularBtn.fire();
@@ -174,10 +191,11 @@ public class SimulationView extends Application {
             enmoValue.setText(String.format("%.3f", controller.getEnmoActual()));
             anglezValue.setText(String.format("%.0f", controller.getAnglezActual()));
             actividadSliderValue.setText(String.format("%.2f", controller.getActividadActual()));
+            periodoCircadianoValue.setText(controller.getNombrePeriodoCircadiano());
         });
 
         // Layout final: controles arriba, luego botones, luego el TabPane con las gráficas
-        root.getChildren().addAll(inputBox, buttonBox, tabPane);
+        root.getChildren().setAll(inputBox, buttonBox, tabPane);
         Scene scene = new Scene(root, 1000, 800);
         scene.getStylesheets().add(getClass().getResource("/edu/system_analysis/view/simulation.css").toExternalForm());
         stage.setScene(scene);
@@ -206,19 +224,77 @@ public class SimulationView extends Application {
         return box;
     }
 
-    // Permite hacer zoom horizontal con la rueda del mouse en el eje X
-    private void addZoomOnScroll(LineChart<Number, Number> chart) {
+    // Zoom solo en eje X (horizontal) con la rueda del ratón (fix multiplataforma)
+    private void addZoomBothAxes(LineChart<Number, Number> chart) {
         NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+
         chart.setOnScroll(event -> {
-            double deltaY = event.getDeltaY();
-            double lower = xAxis.getLowerBound();
-            double upper = xAxis.getUpperBound();
-            double range = upper - lower;
-            double factor = (deltaY > 0) ? 0.8 : 1.25; // acercar o alejar
-            double newRange = Math.max(5, range * factor);
-            double center = (lower + upper) / 2.0;
-            xAxis.setLowerBound(center - newRange / 2.0);
-            xAxis.setUpperBound(center + newRange / 2.0);
+            // Verificar que hay datos
+            if (chart.getData().isEmpty()) return;
+            boolean hasData = false;
+            for (var series : chart.getData()) {
+                if (!series.getData().isEmpty()) {
+                    hasData = true;
+                    break;
+                }
+            }
+            if (!hasData) return;
+
+            // Solo responder a scroll vertical (rueda ratón)
+            if (event.getEventType().getName().equals("SCROLL") && event.isControlDown()) {
+                // Si el usuario mantiene Ctrl, dejar zoom default (ambos ejes)
+                return;
+            }
+            if (Math.abs(event.getDeltaY()) < 1e-3) return;
+            double factor = (event.getDeltaY() > 0) ? 0.85 : 1.18;
+
+            // Zoom SOLO en X
+            double xLower = xAxis.getLowerBound();
+            double xUpper = xAxis.getUpperBound();
+            double xRange = xUpper - xLower;
+            double newXRange = Math.max(5, xRange * factor);
+            double xCenter = (xLower + xUpper) / 2.0;
+            xAxis.setLowerBound(Math.max(0, xCenter - newXRange / 2.0));
+            xAxis.setUpperBound(xCenter + newXRange / 2.0);
+
+            event.consume();
+        });
+
+        // Paneo con botón derecho en ambos ejes (opcional: solo X si quieres)
+        final double[] lastMouse = {0, 0};
+        chart.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                lastMouse[0] = event.getX();
+                lastMouse[1] = event.getY();
+            }
+        });
+        chart.setOnMouseDragged(event -> {
+            if (event.isSecondaryButtonDown()) {
+                double dx = event.getX() - lastMouse[0];
+                double xScale = (xAxis.getUpperBound() - xAxis.getLowerBound()) / chart.getWidth();
+
+                double newXLower = xAxis.getLowerBound() - dx * xScale;
+                double newXUpper = xAxis.getUpperBound() - dx * xScale;
+                xAxis.setLowerBound(Math.max(0, newXLower));
+                xAxis.setUpperBound(newXUpper);
+
+                lastMouse[0] = event.getX();
+                lastMouse[1] = event.getY();
+            }
+        });
+
+        // Doble clic para auto-ajustar a todos los datos
+        chart.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                xAxis.setAutoRanging(true);
+                yAxis.setAutoRanging(true);
+                // Pequeño delay para permitir que el auto-ranging tome efecto
+                javafx.application.Platform.runLater(() -> {
+                    xAxis.setAutoRanging(false);
+                    yAxis.setAutoRanging(false);
+                });
+            }
         });
     }
 

@@ -28,22 +28,22 @@ package edu.system_analysis.simulation;
  * - La regresión logística es ampliamente utilizada para modelar la probabilidad de eventos binarios en fisiología.
  */
 public class MovementProbabilityModel {
-    // Coeficientes basados en literatura científica validada (ver README)
+    // Coeficientes ajustados para mayor sensibilidad a luz y sonido
     // Modelo para probabilidad de actividad/movimiento basado en estímulos externos
-    private double beta0 = -1.5; // intercepto base
-    private double betaLuz = -0.6; // luz reduce prob. movimiento (facilitación del sueño)
-    private double betaSonido = 0.4; // sonido aumenta prob. movimiento (arousal)
-    private double betaEstres = 0.8; // estrés aumenta activación/movimiento
-    private double betaDormido = -1.8; // estar dormido reduce drasticamente prob. movimiento
+    private double beta0 = -2.0; // intercepto base más bajo
+    private double betaLuz = 3.5; // luz aumenta MUCHO prob. movimiento (arousal fuerte)
+    private double betaSonido = 2.8; // sonido aumenta MUCHO prob. movimiento (arousal)
+    private double betaEstres = 1.2; // estrés aumenta activación/movimiento
+    private double betaDormido = -2.5; // estar dormido reduce drasticamente prob. movimiento
 
     // Algoritmo modificado Sadeh para clasificación sueño/vigilia
     // PS = offset + w1*meanActivity + w2*lightLevel + w3*noiseLevel + w4*stressLevel
     // PS >= 0 == sleep, PS < 0 == wake
-    private double sadehOffset = 2.1; // intercepto positivo para favorecer sueño
-    private double sadehActivity = -1.2; // alta actividad reduce prob. sueño
-    private double sadehLight = -0.8; // luz reduce prob. sueño
-    private double sadehNoise = -0.5; // ruido reduce prob. sueño
-    private double sadehStress = -0.9; // estrés reduce prob. sueño
+    private double sadehOffset = 3.0; // intercepto positivo para favorecer sueño
+    private double sadehActivity = -2.0; // alta actividad reduce MUCHO prob. sueño
+    private double sadehLight = -2.5; // luz reduce MUCHO prob. sueño
+    private double sadehNoise = -1.8; // ruido reduce MUCHO prob. sueño
+    private double sadehStress = -1.5; // estrés reduce MUCHO prob. sueño
 
     /**
      * Calcula la probabilidad de que ocurra un movimiento voluntario o involuntario
