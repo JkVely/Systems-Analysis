@@ -9,6 +9,7 @@
 \usepackage{float}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{gensymb}
 
 \floatstyle{boxed}
 \restylefloat{figure}
@@ -27,7 +28,7 @@
 		\textit{Francisco Jose de Caldas District University}\\
 		Bogota, Colombia \\
 		jcquineror@udistrital.edu.co}
-	\and
+	\\
 	\IEEEauthorblockN{Juan Felipe Wilches Gomez}
 	\IEEEauthorblockA{Code: 20231020137\\
 		\textit{Systems Engineering} \\
@@ -181,8 +182,12 @@ Environmental variables are normalized as: $L(t) = \min(1.0, \text{lux}/500)$, $
 
 Sleep probability incorporates both environmental factors and movement history using a modified approach based on established actigraphy algorithms:
 
-\begin{equation}
-	P_{\text{sleep}}(t) = \sigma\left(\alpha_0 + \alpha_A \cdot A(t) + \alpha_L \cdot L(t) + \alpha_S \cdot S(t) + \alpha_{\sigma} \cdot \sigma_s(t)\right) \cdot C_{\text{circadian}}(t)
+	\begin{equation}
+	\begin{aligned}
+    P_{\text{sleep}}(t) = \sigma\big(&\alpha_0 + \alpha_A \cdot A(t) + \alpha_L \cdot L(t) \\
+    &+ \alpha_S \cdot S(t) + \alpha_{\sigma} \cdot \sigma_s(t)\big) \\
+    &\cdot C_{\text{circadian}}(t)
+\end{aligned}
 \end{equation}
 
 where movement activity $A(t)$ represents recent movement history, and coefficients are:
@@ -219,7 +224,11 @@ Based on the computed movement probabilities, the simulation generates accelerom
 
 The complete simulation cascade follows:
 \begin{equation}
-	\text{Environmental Events} \xrightarrow{\text{Eq. 2}} \text{Movement Probability} \xrightarrow{\text{Stochastic}} \text{Movement State} \xrightarrow{\text{Simulation}} \text{Output Indicators}
+\begin{aligned}
+    \text{Environmental Events} &\xrightarrow{\text{Eq. 2}} \text{Movement Probability} \\
+    &\xrightarrow{\text{Stochastic}} \text{Movement State} \\
+    &\xrightarrow{\text{Simulation}} \text{Output Indicators}
+\end{aligned}
 \end{equation}
 
 This framework enables systematic investigation of how environmental factors influence movement probability in controlled scenarios, providing insights into sleep-environment interactions without requiring direct measurement of physiological signals.
@@ -277,8 +286,8 @@ The simulation parameters are calibrated based on established actigraphy literat
 
 \subsubsection{Anglez Variability Parameters}
 \begin{itemize}
-	\item Wake state: $\sigma_{\theta,\text{wake}} = 15°$
-	\item Sleep state: $\sigma_{\theta,\text{sleep}} = 3°$
+	\item Wake state: $\sigma_{\theta,\text{wake}} = 15^\circ$
+	\item Sleep state: $\sigma_{\theta,\text{sleep}} = 3^\circ$
 \end{itemize}
 
 These parameters ensure that simulated accelerometry signals fall within physiologically realistic ranges while maintaining sufficient stochastic variability to model real-world complexity.
