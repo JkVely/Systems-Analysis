@@ -1,0 +1,48 @@
+/* Estilo elegante para la simulación */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #f8fafc, #e0e7ef);
+}
+.label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+.button {
+    -fx-background-color: #4f8cff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 20 8 20;
+}
+.button:hover {
+    -fx-background-color: #357ae8;
+}
+.chart-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+.chart-legend {
+    -fx-font-size: 13px;
+}
+.slider .track {
+    -fx-background-color: #b3c6e7;
+}
+.slider .thumb {
+    -fx-background-color: #4f8cff;
+}
+.chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+/* Línea punteada para el umbral dinámico (solo la serie de umbral debe tener esta clase personalizada) */
+.chart-series-line.umbral-line {
+    -fx-stroke-dash-array: 8 8;
+    -fx-stroke: #888;
+}
+
+/* Ocultar los puntos (símbolos) de la serie de umbral */
+.chart-line-symbol.umbral-symbol {
+    -fx-background-color: transparent;
+    -fx-shape: none;
+}

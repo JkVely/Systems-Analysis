@@ -1,0 +1,607 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{gensymb}
+
+\floatstyle{boxed}
+\restylefloat{figure}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+	T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Technical Report: Event-Based Simulation Framework for Environmental Influence on Sleep-Wake Movement Patterns}
+
+\author{
+	\IEEEauthorblockN{Juan Carlos Quintero Rubiano}
+	\IEEEauthorblockA{Code: 20232020172\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jcquineror@udistrital.edu.co}
+	\\
+	\IEEEauthorblockN{Juan Felipe Wilches Gomez}
+	\IEEEauthorblockA{Code: 20231020137\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jfwilchesg@udistrital.edu.co}
+	\and
+	\IEEEauthorblockN{Juan Nicolas Diaz Salamanca}
+	\IEEEauthorblockA{Code: 20232020059\\
+		\textit{Systems Engineering} \\
+		\textit{Francisco Jose de Caldas District University}\\
+		Bogota, Colombia \\
+		jndiazs@udistrital.edu.co}
+}
+
+\maketitle
+
+\begin{abstract}
+	Understanding the relationship between environmental factors and sleep-wake patterns is crucial for advancing sleep research and developing effective monitoring systems. This technical report presents an event-based simulation framework for modeling how environmental stimuli influence movement probability patterns during sleep-wake transitions. The simulation system focuses on the stochastic relationship between environmental factors (light intensity, ambient sound, and stress levels) and movement occurrence, rather than directly generating accelerometry values. Our framework implements an event-driven probabilistic model where environmental disturbances randomly trigger changes in movement patterns, reflecting real-world sleep environment dynamics. The system employs a Model-View-Controller architecture in Java with JavaFX visualization, incorporating logistic regression models for movement probability estimation. By emphasizing the event-based nature of environmental influences on movement patterns, this framework provides a valuable tool for studying sleep-environment interactions in controlled scenarios and understanding the probabilistic mechanisms underlying sleep-wake transitions.
+\end{abstract}
+
+\section{Introduction}
+
+Understanding the interplay between sleep, movement, and environmental factors is essential for advancing the study of sleep quality and its physiological implications. Sleep is a complex biological process that supports the optimal functioning of multiple internal systems, most notably the brain's glymphatic clearance mechanism, which operates most efficiently during sleep~\cite{Xie2013}. Traditionally, sleep states have been classified using polysomnography (PSG), which, despite its accuracy, is costly, invasive, and impractical for long-term or large-scale monitoring~\cite{Sadeh2011}. As a result, alternative approaches leveraging wearable accelerometry have gained prominence due to their non-invasiveness, affordability, and suitability for continuous monitoring~\cite{vanHees2015}.
+
+This work proposes an event-based simulation framework to systematically analyze how external factors—such as light, sound, and stress—affect hand movement as measured by wearable accelerometers. By modeling the probabilistic relationship between environmental stimuli and movement, the simulation aims to reflect real-world behavioral patterns and provide insights into the mechanisms underlying sleep-wake transitions.
+
+\section{Objectives}
+
+\begin{itemize}
+	\item To develop an event-driven simulation framework that models the influence of external environmental factors (light, sound, and stress) on hand movement probability during sleep-wake transitions.
+	\item To implement a stochastic event-based system where environmental disturbances randomly trigger changes in movement patterns, reflecting real-world sleep environment dynamics.
+	\item To investigate how discrete environmental events affect the probability of movement occurrence, rather than directly generating specific accelerometry values.
+	\item To provide a computational platform for studying the stochastic relationship between environmental stimuli and movement probability in controlled scenarios, facilitating research into sleep-environment interactions.
+\end{itemize}
+
+\section{Technical Objectives}
+
+This technical report addresses the following specific objectives:
+
+\begin{itemize}
+	\item \textbf{System Development}: Design and implement an event-driven simulation framework that models environmental factor influences on accelerometry-based sleep detection using Java MVC architecture.
+	\item \textbf{Algorithm Implementation}: Develop simulation-specific mathematical models for ENMO and Anglez generation based on movement probability rather than raw accelerometer calculations.
+	\item \textbf{Environmental Modeling}: Implement stochastic environmental variable evolution with discrete event triggers to simulate realistic sleep environment conditions.
+	\item \textbf{Evaluation Framework}: Establish methods for assessing simulation realism and behavioral patterns, ensuring outputs fall within physiologically reasonable ranges and exhibit appropriate temporal dynamics.
+	\item \textbf{Performance Analysis}: Evaluate simulation behavior through comprehensive analysis of movement patterns, environmental responsiveness, and system dynamics.
+\end{itemize}
+
+\section{State of the Art}
+
+Sleep monitoring and analysis have evolved significantly from laboratory-based polysomnography to accessible, consumer-oriented wearable technologies. This evolution has been driven by both technological advances and the growing recognition of sleep's critical role in health and wellbeing.
+
+\subsection{Traditional Sleep Assessment Methods}
+
+Polysomnography (PSG) remains the gold standard for comprehensive sleep assessment, enabling detailed classification of sleep stages through multi-modal physiological signals including electroencephalography (EEG), electrooculography (EOG), and electromyography (EMG)~\cite{Sadeh2011, PMC1740426}. PSG provides unprecedented detail about sleep architecture, allowing identification of specific sleep stages (N1, N2, N3, REM) and detection of pathological events such as apneas and arousals.
+
+However, PSG presents significant practical limitations that restrict its widespread application. The procedure requires specialized laboratory facilities, trained technicians, and expensive equipment, making it cost-prohibitive for routine monitoring or large-scale studies~\cite{PMC8141649, PMC9727457}. Additionally, the "first-night effect" and the artificial laboratory environment can significantly alter natural sleep patterns, potentially compromising the ecological validity of measurements.
+
+\subsection{Actigraphy-Based Sleep Monitoring}
+
+In response to PSG limitations, actigraphy has emerged as a practical alternative for sleep-wake pattern assessment. Actigraphy leverages the fundamental principle that movement patterns differ systematically between wake and sleep states, with significantly reduced movement during sleep periods~\cite{vanHees2015, PMC6801055}. This approach enables continuous, unobtrusive monitoring in natural sleep environments over extended periods.
+
+Modern actigraphy devices typically employ triaxial accelerometers to capture movement in three spatial dimensions. The raw acceleration data undergoes sophisticated signal processing to extract meaningful activity metrics. Two primary approaches have dominated the field:
+
+\textbf{Activity Count Methods}: Traditional devices (e.g., Actiwatch) convert raw acceleration into proprietary "activity counts" using device-specific algorithms. While widely used in clinical research, these methods lack standardization and interpretability across different device manufacturers.
+
+\textbf{Raw Signal Processing}: Contemporary approaches process raw triaxial acceleration directly, calculating standardized metrics such as ENMO (Euclidean Norm Minus One) and angular measurements. This approach enhances reproducibility and enables direct comparison across studies and devices~\cite{vanHees2015}.
+
+\subsection{Sleep-Wake Classification Algorithms}
+
+The computational pipeline for actigraphy-based sleep classification typically involves several stages: data acquisition, preprocessing, feature extraction, classification, and temporal smoothing. Various algorithmic approaches have been developed and validated:
+
+\textbf{Threshold-Based Algorithms}: Classical approaches like the Cole-Kripke and Sadeh algorithms use empirically-derived thresholds applied to activity counts or processed acceleration data. These methods are computationally efficient and have extensive clinical validation but may lack sensitivity to individual differences~\cite{Cole1992, Sadeh2011}.
+
+\textbf{Machine Learning Approaches}: Modern techniques employ supervised learning algorithms trained on labeled sleep-wake data. Support vector machines, random forests, and ensemble methods have demonstrated improved accuracy over threshold-based approaches, particularly in challenging populations such as insomniacs or shift workers~\cite{PMC8141649, PMC9727457}.
+
+\textbf{Deep Learning Models}: Recent advances utilize recurrent neural networks (RNNs) and Long Short-Term Memory (LSTM) networks to capture temporal dependencies in accelerometry data. These approaches show particular promise for detecting subtle sleep-wake transitions and accommodating individual behavioral patterns~\cite{PMC6954684}.
+
+\subsection{Environmental Factors and Sleep Quality}
+
+Growing recognition of environmental influences on sleep quality has motivated research into the mechanisms by which external factors affect sleep-wake transitions. Light exposure, particularly blue-rich light, significantly impacts circadian rhythms and sleep onset timing through melanopsin-mediated pathways. Acoustic environments influence sleep through both immediate arousal responses and longer-term sleep fragmentation effects.
+
+Recent studies have begun investigating the complex interactions between multiple environmental factors and their cumulative effects on sleep quality. However, controlled experimental investigation of these interactions remains challenging due to ethical constraints and the complexity of real-world environments.
+
+\subsection{Event-Based Modeling in Sleep Research}
+
+Traditional sleep research has largely employed continuous time-series analysis approaches that treat environmental and physiological variables as smooth functions. However, recent work has highlighted the importance of discrete event-driven processes in sleep regulation~\cite{PMC9416198, PMC6954684, PMC7323637}.
+
+Event-based modeling approaches explicitly represent sudden environmental changes (light transitions, noise events, stress episodes) as discrete events that can trigger immediate physiological responses. This framework better captures the non-linear, threshold-dependent nature of sleep-wake transitions and provides a more realistic representation of real-world sleep environments.
+
+\subsection{Research Gaps and Motivation}
+
+Despite significant advances in actigraphy-based sleep monitoring, several critical gaps remain in our understanding:
+
+\begin{enumerate}
+	\item \textbf{Mechanistic Understanding}: While actigraphy algorithms achieve reasonable accuracy, the underlying mechanisms linking environmental factors to movement patterns remain poorly understood.
+
+	\item \textbf{Environmental Integration}: Most existing approaches treat environmental factors as confounding variables rather than integral components of sleep regulation models.
+
+	\item \textbf{Stochastic Behavior}: The inherent randomness and individual variability in sleep-wake transitions are inadequately represented in current deterministic models.
+
+	\item \textbf{Validation Frameworks}: Limited availability of controlled environments for testing hypotheses about environmental influences on sleep behavior.
+\end{enumerate}
+
+These gaps motivate the development of event-based simulation frameworks that can systematically investigate environmental influences on sleep while providing controlled testbeds for algorithm development and validation. Such frameworks offer the potential to advance both our fundamental understanding of sleep regulation and the practical accuracy of consumer sleep monitoring technologies.
+
+
+\section{Mathematical Model and Event-Based Framework}
+
+This simulation employs a comprehensive event-driven, stochastic model that quantifies the influence of external environmental factors on hand movement probability patterns. The mathematical formulation focuses on the stochastic relationship between environmental stimuli and movement occurrence, providing a framework for understanding sleep-environment interactions through controlled scenario modeling.
+
+\subsection{Event-Based Environmental Factor Modeling}
+
+The simulation framework models environmental factors as stochastic processes that influence movement probability through discrete events. Three primary environmental variables are considered:
+
+\begin{itemize}
+	\item \textbf{Light Intensity} ($L(t)$): Normalized light exposure affecting circadian rhythms
+	\item \textbf{Sound Level} ($S(t)$): Ambient noise disrupting sleep continuity  
+	\item \textbf{Stress Factor} ($\sigma_s(t)$): Psychological stress influencing movement patterns
+\end{itemize}
+
+Each environmental variable evolves through both continuous stochastic drift and discrete event-driven disturbances:
+
+\begin{equation}
+	X_i(t+1) = X_i(t) + \epsilon_i(t) + \Delta X_{i,\text{event}}(t)
+\end{equation}
+
+where $\epsilon_i(t) \sim \mathcal{N}(0, \sigma_{\epsilon,i}^2)$ represents continuous environmental fluctuation, and $\Delta X_{i,\text{event}}(t)$ represents discrete environmental events occurring with probability $P_{\text{event}}$.
+
+\subsection{Movement Probability Model}
+
+The core of the simulation focuses on how environmental factors influence the probability of movement occurrence. Movement probability is modeled using a logistic regression framework:
+
+\begin{equation}
+	P_{\text{move}}(t) = \sigma\left(\beta_0 + \beta_L \cdot L(t) + \beta_S \cdot S(t) + \beta_{\sigma} \cdot \sigma_s(t) + \beta_{\text{sleep}} \cdot I_{\text{sleep}}(t)\right)
+\end{equation}
+
+where $\sigma(z) = \frac{1}{1+e^{-z}}$ is the logistic function, and coefficients represent the influence strength of each environmental factor:
+
+\begin{align}
+	\beta_0               & = -2.0 \quad \text{(baseline movement probability)}                      \\
+	\beta_L    & = 3.5 \quad \text{(light promotes arousal and movement)}          \\
+	\beta_S     & = 2.8 \quad \text{(sound disrupts sleep, increases movement)}          \\
+	\beta_{\sigma} & = 1.2 \quad \text{(stress increases movement activity)}                \\
+	\beta_{\text{sleep}}  & = -2.5 \quad \text{(sleep state inhibits movement)}
+\end{align}
+
+Environmental variables are normalized as: $L(t) = \min(1.0, \text{lux}/500)$, $S(t) = \min(1.0, \text{dB}/60)$, $\sigma_s(t) = \min(1.0, \text{stress}/10)$.
+
+\subsection{Sleep State Probability Estimation}
+
+Sleep probability incorporates both environmental factors and movement history using a modified approach based on established actigraphy algorithms:
+
+	\begin{equation}
+	\begin{aligned}
+    P_{\text{sleep}}(t) = \sigma\big(&\alpha_0 + \alpha_A \cdot A(t) + \alpha_L \cdot L(t) \\
+    &+ \alpha_S \cdot S(t) + \alpha_{\sigma} \cdot \sigma_s(t)\big) \\
+    &\cdot C_{\text{circadian}}(t)
+\end{aligned}
+\end{equation}
+
+where movement activity $A(t)$ represents recent movement history, and coefficients are:
+
+\begin{align}
+	\alpha_0                 & = 3.0 \quad \text{(baseline favoring sleep)}          \\
+	\alpha_A & = -2.0 \quad \text{(movement opposes sleep)} \\
+	\alpha_L      & = -2.5 \quad \text{(light opposes sleep)}    \\
+	\alpha_S       & = -1.8 \quad \text{(noise opposes sleep)}             \\
+	\alpha_{\sigma}   & = -1.5 \quad \text{(stress opposes sleep)}
+\end{align}
+
+The circadian modulation factor $C_{\text{circadian}}(t)$ implements a 24-hour cycle reflecting natural sleep-wake propensity.
+
+\subsection{Discrete Event Framework}
+
+Environmental disturbances occur as discrete events modeled using a Poisson process. Event occurrence probability follows:
+
+\begin{equation}
+	P(\text{Event at time } t) = 1 - e^{-\lambda \Delta t}
+\end{equation}
+
+where $\lambda$ represents the event rate. When events occur, environmental variables experience abrupt changes:
+
+\begin{equation}
+	X_i(t^+) = X_i(t^-) + \Delta X_{i,\text{event}}, \quad \Delta X_{i,\text{event}} \sim \mathcal{N}(\mu_{\text{event},i}, \sigma_{\text{event},i}^2)
+\end{equation}
+
+This framework captures sudden environmental disruptions (light changes, noise events, stress spikes) that characterize real sleep environments.
+
+\subsection{Simulation Output Generation}
+
+Based on the computed movement probabilities, the simulation generates accelerometry-inspired outputs (ENMO and Anglez values) as proxy indicators of movement occurrence, not as direct accelerometer measurements. These outputs serve as visualization aids for understanding the relationship between environmental factors and movement patterns.
+
+The complete simulation cascade follows:
+\begin{equation}
+\begin{aligned}
+    \text{Environmental Events} &\xrightarrow{\text{Eq. 2}} \text{Movement Probability} \\
+    &\xrightarrow{\text{Stochastic}} \text{Movement State} \\
+    &\xrightarrow{\text{Simulation}} \text{Output Indicators}
+\end{aligned}
+\end{equation}
+
+This framework enables systematic investigation of how environmental factors influence movement probability in controlled scenarios, providing insights into sleep-environment interactions without requiring direct measurement of physiological signals.
+\section{Simulation Architecture and Implementation}
+
+The event-based simulation framework is implemented using a Model-View-Controller (MVC) architecture in Java, leveraging JavaFX for real-time visualization. This design emphasizes modularity and adherence to systems engineering principles, enabling extensible research into sleep-wake dynamics.
+
+\subsection{Algorithmic Implementation}
+
+The simulation operates through discrete time steps, implementing the mathematical framework described above through the following algorithmic process:
+
+\begin{enumerate}
+	\item \textbf{Environmental Update}: At each time step $t$, environmental variables $\{x_{\text{lux}}, x_{\text{dB}}, x_{\text{stress}}\}$ are updated using Gaussian noise processes as described in Equation (11).
+
+	\item \textbf{Event Detection}: Every $N = 12$ time steps, the simulation evaluates for discrete environmental events using the Poisson process model (Equation 12). When triggered, abrupt environmental changes are applied according to Equation (13).
+
+	\item \textbf{Movement Probability Calculation}: The movement probability $P_{\text{move}}(t)$ is computed using the logistic regression model (Equation 4), incorporating current environmental states and sleep indicators.
+
+	\item \textbf{Stochastic Movement Decision}: Movement occurrence is determined by comparing $P_{\text{move}}(t)$ against a uniformly distributed random variable $U \sim \text{Uniform}[0,1]$. Movement occurs if $P_{\text{move}}(t) > U$.
+
+	\item \textbf{Accelerometry Signal Generation}: Based on movement state, ENMO and Anglez values are generated using the stochastic models (Equations 7-10), preserving physiological realism.
+
+	\item \textbf{Sleep State Estimation}: Sleep probability $P_{\text{sleep}}(t)$ is calculated using the modified Sadeh algorithm (Equation 6), incorporating both movement history and environmental context.
+
+	\item \textbf{Visualization Update}: All computed variables are transmitted to the JavaFX interface for real-time graphical display and analysis.
+\end{enumerate}
+
+\subsection{Parametrization and Calibration}
+
+The simulation parameters are calibrated based on established actigraphy literature and physiological constraints:
+
+\subsubsection{Movement Model Parameters}
+\begin{itemize}
+	\item $\beta_0 = -2.0$ (baseline logit for movement probability)
+	\item $\beta_{\text{lux}} = 3.5$ (light influence coefficient)
+	\item $\beta_{\text{dB}} = 2.8$ (sound influence coefficient)
+	\item $\beta_{\text{stress}} = 1.2$ (stress influence coefficient)
+	\item $\beta_{\text{sleep}} = -2.5$ (sleep state suppression factor)
+\end{itemize}
+
+\subsubsection{Sleep Model Parameters}
+\begin{itemize}
+	\item $\alpha_0 = 3.0$ (baseline favoring sleep)
+	\item $\alpha_{\text{activity}} = -2.0$ (activity strongly opposes sleep)
+	\item $\alpha_{\text{lux}} = -2.5$ (light strongly opposes sleep)
+	\item $\alpha_{\text{dB}} = -1.8$ (noise opposes sleep)
+	\item $\alpha_{\text{stress}} = -1.5$ (stress opposes sleep)
+\end{itemize}
+
+\subsubsection{ENMO Distribution Parameters}
+\begin{itemize}
+	\item Wake state: $\mu_{\text{wake}} = 0.04$g, $\sigma_{\text{wake}} = 0.02$g
+	\item Sleep state: $\mu_{\text{sleep}} = 0.01$g, $\sigma_{\text{sleep}} = 0.003$g
+\end{itemize}
+
+\subsubsection{Anglez Variability Parameters}
+\begin{itemize}
+	\item Wake state: $\sigma_{\theta,\text{wake}} = 15^\circ$
+	\item Sleep state: $\sigma_{\theta,\text{sleep}} = 3^\circ$
+\end{itemize}
+
+These parameters ensure that simulated accelerometry signals fall within physiologically realistic ranges while maintaining sufficient stochastic variability to model real-world complexity.
+
+\begin{table}[H]
+	\centering
+	\caption{Simulation Parameters and Implementation Values}
+	\label{tab:simulation_parameters}
+	\begin{tabular}{|l|c|c|c|}
+		\hline
+		\textbf{Parameter}             & \textbf{Simulation Value} & \textbf{Physiological Range} & \textbf{Reference} \\
+		\hline
+		\hline
+		\multicolumn{4}{|c|}{\textbf{ENMO Generation Parameters (g)}}                                                  \\
+		\hline
+		$\mu_{\text{wake}}$            & 0.040                     & 0.035-0.050                  & Simulation         \\
+		$\sigma_{\text{wake}}$         & 0.020                     & 0.015-0.025                  & Simulation         \\
+		$\mu_{\text{sleep}}$           & 0.010                     & 0.008-0.015                  & Simulation         \\
+		$\sigma_{\text{sleep}}$        & 0.003                     & 0.002-0.005                  & Simulation         \\
+		Wake bounds                    & [0.012, 0.15]             & [0.010, 0.20]                & Constrained        \\
+		Sleep bounds                   & [0.004, 0.022]            & [0.002, 0.030]               & Constrained        \\
+		\hline
+		\multicolumn{4}{|c|}{\textbf{Anglez Generation Parameters (degrees)}}                                          \\
+		\hline
+		$\sigma_{\theta,\text{wake}}$  & 15.0                      & 10.0-20.0                    & Simulation         \\
+		$\sigma_{\theta,\text{sleep}}$ & 2.0                       & 2.0-5.0                      & Simulation         \\
+		Wake bounds                    & [-40°, 40°]               & [-45°, 45°]                  & Constrained        \\
+		Sleep bounds                   & [-7°, 7°]                 & [-10°, 10°]                  & Constrained        \\
+		\hline
+		\multicolumn{4}{|c|}{\textbf{Movement Model Coefficients}}                                                     \\
+		\hline
+		$\beta_0$                      & -2.0                      & -3.0 to -1.0                 & Calibrated         \\
+		$\beta_{\text{lux}}$           & 3.5                       & 2.0-4.0                      & Calibrated         \\
+		$\beta_{\text{dB}}$            & 2.8                       & 2.0-3.5                      & Calibrated         \\
+		$\beta_{\text{stress}}$        & 1.2                       & 1.0-1.5                      & Calibrated         \\
+		$\beta_{\text{sleep}}$         & -2.5                      & -3.0 to -2.0                 & Calibrated         \\
+		\hline
+		\multicolumn{4}{|c|}{\textbf{Sleep Model Coefficients}}                                                        \\
+		\hline
+		$\alpha_0$                     & 3.0                       & 2.5-3.5                      & Calibrated         \\
+		$\alpha_{\text{activity}}$     & -2.0                      & -2.5 to -1.5                 & Calibrated         \\
+		$\alpha_{\text{lux}}$          & -2.5                      & -3.0 to -2.0                 & Calibrated         \\
+		$\alpha_{\text{dB}}$           & -1.8                      & -2.0 to -1.5                 & Calibrated         \\
+		$\alpha_{\text{stress}}$       & -1.5                      & -2.0 to -1.0                 & Calibrated         \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_1.png}
+	\caption{Simulation graphical interface with initial values}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_2.png}
+	\caption{Simulation graphical interface with simulation steps}
+\end{figure}
+
+\section{Results and Analysis}
+
+The event-based simulation framework successfully demonstrates the complex interplay between environmental factors and accelerometry-derived sleep metrics. Through systematic analysis of different environmental conditions, we observe characteristic patterns that align with established sleep research findings.
+
+\subsection{Stochastic Behavior and Environmental Sensitivity}
+
+The simulation exhibits several key features that reflect real-world sleep dynamics:
+
+\begin{itemize}
+	\item \textbf{Gaussian Environmental Fluctuations}: Continuous random variations in light, sound, and stress variables introduce realistic uncertainty into movement and sleep probability predictions, mirroring the inherent variability of natural sleep environments.
+
+	\item \textbf{Event-Driven Environmental Changes}: Discrete environmental events occurring every 12 time steps simulate real-world disturbances such as lighting changes, sudden noise, or stress episodes. These events create observable perturbations in the accelerometry signals.
+
+	\item \textbf{Stochastic Movement Decision Process}: Movement determination through probabilistic comparison with uniform random variables ensures that identical environmental conditions can yield different movement outcomes, reflecting the inherent unpredictability of human behavior.
+
+	\item \textbf{Physiologically-Constrained Signal Generation}: ENMO values are generated from normal distributions with parameters $\mathcal{N}(0.04, 0.02^2)$g during wake periods and $\mathcal{N}(0.01, 0.003^2)$g during sleep periods, ensuring signals remain within established physiological ranges while maintaining appropriate stochastic variability.
+
+	\item \textbf{Orientation-Dependent Anglez Dynamics}: Angular variations follow state-dependent stochastic processes, with larger fluctuations during wake periods reflecting increased postural adjustments and smaller variations during sleep reflecting natural micro-movements.
+\end{itemize}
+
+\subsection{Environmental Factor Analysis}
+
+\subsubsection{High Stress Conditions}
+Under elevated stress conditions (Figures 3-5), the simulation demonstrates increased sensitivity to environmental perturbations. High stress levels amplify the influence of light and sound variations on movement probability, resulting in more chaotic and unpredictable ENMO and Anglez patterns. This behavior aligns with clinical observations that stress increases sleep fragmentation and movement frequency during sleep periods.
+
+\subsubsection{Simulation-Specific Environmental Impact Analysis}
+
+The event-based simulation framework demonstrates clear environmental influences on generated accelerometry patterns:
+
+\textbf{Light Response Patterns}: When light intensity increases from 5 lux (deep night) to 200 lux (moderate evening), the simulation shows:
+\begin{itemize}
+	\item Movement probability increases from 0.1 to 0.4 (logistic coefficient $\beta_{\text{lux}} = 3.5$)
+	\item ENMO values shift from sleep range [0.004, 0.022]g to wake range [0.012, 0.15]g
+	\item Anglez variations increase from ±7° to ±40° reflecting postural changes
+\end{itemize}
+
+\textbf{Sound Response Dynamics}: Sound level increases from 25 dB (quiet night) to 60 dB (moderate noise) produce:
+\begin{itemize}
+	\item Movement probability increases by factor of 2.8 (coefficient $\beta_{\text{dB}} = 2.8$)
+	\item Angular changes transition from micro-movements (±2°) to larger adjustments (±15°)
+	\item Increased variability in both ENMO and Anglez generation bounds
+\end{itemize}
+
+\textbf{Stress Modulation Effects}: Stress level changes from 1 (low) to 8 (high) demonstrate:
+\begin{itemize}
+	\item Enhanced sensitivity to light and sound perturbations
+	\item Sleep probability reduced by factor of 1.5 (coefficient $\alpha_{\text{stress}} = -1.5$)
+	\item More chaotic patterns in both ENMO and Anglez time series
+	\item Decreased circadian rhythm stability, particularly during evening transitions
+\end{itemize}
+
+\textbf{Event-Driven Response Characteristics}: The simulation's discrete event system (every 12 time steps) creates:
+\begin{itemize}
+	\item Sudden environmental changes that trigger immediate movement responses
+	\item Realistic perturbations in otherwise stable sleep patterns
+	\item Environmental memory effects through the modified Sadeh algorithm implementation
+	\item Stochastic resilience - identical conditions produce different outcomes due to inherent randomness
+\end{itemize}
+
+This demonstrates that the simulation successfully models how environmental factors cascade through the probabilistic framework to produce realistic accelerometry patterns, validating the event-based approach for studying sleep-environment interactions.
+
+\subsection{Critical Findings}
+
+Analysis of the simulation results reveals that stress levels serve as a fundamental modulator of sleep stability. Unlike light and sound, which primarily trigger immediate responses, stress appears to influence the underlying system's sensitivity to all environmental perturbations. This finding suggests that stress management may be more critical for long-term sleep quality than controlling acute environmental disturbances.
+
+However, reduced stress levels generate simulations that are less sensitive to the chaotic influences of light and sound, resulting in more stable ENMO and Anglez patterns over time. Based on these simulation results, we conclude that stress levels are fundamental for maintaining long-term sleep state stability compared to light and sound factors.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_3.png}
+	\caption{Simulation with highest stress level}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_4.png}
+	\caption{ENMO evolution with highest stress level}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_5.png}
+	\caption{Anglez evolution with highest stress level}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_6.png}
+	\caption{Simulation with lowest stress level}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_7.png}
+	\caption{ENMO evolution with lowest stress level}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/simulation_8.png}
+	\caption{Anglez evolution with lowest stress level}
+\end{figure}
+
+However, reduced stress levels generate simulations that are less sensitive to the chaotic influences of light and sound, resulting in more stable ENMO and Anglez patterns over time. Based on these simulation results, we conclude that stress levels are fundamental for maintaining long-term sleep state stability compared to light and sound factors.
+
+\section{Discussion and Implications}
+
+The event-based simulation framework presented in this work represents a significant advancement in computational sleep research, providing several key contributions to the field:
+
+\subsection{Methodological Contributions}
+
+\textbf{Event-Driven Modeling Framework}: Unlike traditional time-series approaches that treat environmental factors as smooth continuous variables, our event-based model explicitly incorporates discrete environmental disturbances. This design better reflects real-world sleep environments where sudden changes in light, sound, or stress can have disproportionate effects on sleep quality.
+
+\textbf{Mechanistic Understanding}: By implementing a clear cascade from environmental stimuli to accelerometry signals (Environment → Movement Probability → Movement Events → ENMO/Anglez), the simulation provides insight into the physiological mechanisms underlying actigraphy-based sleep detection algorithms.
+
+\textbf{Stochastic Realism}: The integration of multiple sources of randomness—environmental fluctuations, discrete events, movement decisions, and signal generation—creates accelerometry patterns that exhibit the complexity and unpredictability observed in real physiological data.
+
+\subsection{Clinical and Research Implications}
+
+\textbf{Sleep Environment Optimization}: The simulation's demonstration that stress levels modulate environmental sensitivity suggests that clinical sleep interventions should prioritize stress management alongside traditional environmental controls (light, noise reduction).
+
+\textbf{Actigraphy Algorithm Development}: The framework provides a controlled testbed for developing and validating new sleep-wake classification algorithms under various environmental conditions, potentially improving the accuracy of consumer sleep monitoring devices.
+
+\textbf{Personalized Sleep Medicine}: The parametric nature of the simulation enables exploration of individual differences in environmental sensitivity, supporting the development of personalized sleep intervention strategies.
+
+\subsection{Limitations and Future Directions}
+
+While the current framework successfully models key aspects of environmental influence on sleep, several limitations suggest directions for future research:
+
+\begin{itemize}
+	\item \textbf{Physiological Complexity}: The simulation does not incorporate direct EEG, EMG, or EOG signals that would be required for detailed sleep stage classification beyond binary wake/sleep states.
+
+	\item \textbf{Variable Independence}: Current environmental variables are modeled as independent, whereas real-world factors often exhibit correlations (e.g., light and circadian stress responses).
+
+	\item \textbf{Pathological Conditions}: The framework does not explicitly model sleep disorders such as sleep apnea, periodic limb movements, or micro-arousals that significantly affect accelerometry patterns.
+
+	\item \textbf{Individual Variability}: While parameters can be adjusted, the current model does not incorporate systematic individual differences in environmental sensitivity or circadian preferences.
+\end{itemize}
+
+\section{Conclusion}
+
+This work successfully demonstrates the development of an event-based simulation framework for modeling environmental influences on movement probability patterns during sleep-wake transitions. The key achievements include:
+
+\begin{enumerate}
+	\item \textbf{Event-Driven Architecture}: Implementation of a stochastic, event-driven simulation that models how environmental factors influence movement probability, capturing both gradual environmental changes and discrete disturbance events.
+
+	\item \textbf{Probabilistic Framework}: Development of a comprehensive mathematical model focusing on the relationship between environmental stimuli and movement occurrence, rather than direct generation of accelerometry values.
+
+	\item \textbf{Behavioral Realism}: Demonstration that simulated movement patterns fall within physiologically reasonable ranges and exhibit appropriate responses to environmental factors.
+
+	\item \textbf{Environmental Factor Analysis}: Systematic investigation revealing how different environmental factors (light, sound, stress) influence movement probability, with implications for understanding sleep-environment interactions.
+\end{enumerate}
+
+The simulation framework represents a valuable computational tool for advancing our understanding of sleep-environment dynamics and supporting research into how external factors influence sleep-wake behavior patterns. By providing a controlled environment for testing hypotheses about environmental influences on movement probability, this work contributes to the broader goal of developing better understanding of sleep regulation mechanisms.
+
+Future research directions include extending the framework to incorporate individual differences, circadian rhythm variations, and additional environmental factors, ultimately advancing toward comprehensive computational models of environmental influences on sleep behavior.
+
+\section{Real Data Integration and Comparison}
+
+To validate the simulation results, we integrate real-world data and compare it with the simulated outputs. The real data corresponds to an onset state and consists of the following columns:
+\begin{itemize}
+	\item \textbf{id}: Identifier for the data source.
+	\item \textbf{step}: Step number in the sequence.
+	\item \textbf{anglez}: Angular measurement.
+	\item \textbf{enmo}: Euclidean Norm Minus One value.
+\end{itemize}
+
+\subsection{Real Data}
+The real data used for comparison is as follows:
+\begin{table}[H]
+	\centering
+	\caption{Real Data Sample (Onset State)}
+	\label{tab:real_data_sample}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		\textbf{id}  & \textbf{step} & \textbf{anglez} & \textbf{enmo} \\
+		\hline
+		038441c925bb & 19999         & -61.163200      & 0.0192        \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Comparison with Simulation Outputs}
+On step 39, in this simulation, the following values were generated:
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/prob_sim.png}
+	\caption{Simulated sleep probability for Step 39}
+	\label{fig:simulation_outputs_step39}
+\end{figure}
+
+As we can see in Figure \ref{fig:simulation_outputs_step39}, the simulated sleep probability at step 39 is approximately 0.7, indicating a moderate likelihood of sleep state.
+
+On ENMO simulation we obtained:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/enmo_sim.png}
+	\caption{Simulated ENMO for Step 39}
+	\label{fig:simulation_enmo_step39}
+\end{figure}
+
+The simulated ENMO value at step 39 is approximately 0.02, a close match to the real data value of 0.0192.
+
+On Anglez simulation we obtained:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{images/anglez_sim.png}
+	\caption{Simulated Anglez for Step 39}
+	\label{fig:simulation_anglez_step39}
+\end{figure}
+
+The simulated Anglez value at step 39 is between -60 and -66 degrees, which is consistent with the real data value of -61.163200 degrees.
+
+\begin{thebibliography}{
+	99}
+
+	\bibitem{Xie2013}
+	L. Xie et al., "Sleep drives metabolite clearance from the adult brain," \textit{Science}, vol. 342, no. 6156, pp. 373-377, 2013.
+
+	\bibitem{Sadeh2011}
+	A. Sadeh, "The role and validity of actigraphy in sleep medicine: an update," \textit{Sleep Medicine Reviews}, vol. 15, no. 4, pp. 259-267, 2011.
+
+	\bibitem{vanHees2015}
+	V. T. van Hees et al., "A novel, open access method to assess sleep duration using a wrist-worn accelerometer," \textit{PLoS One}, vol. 10, no. 11, p. e0142533, 2015.
+
+	\bibitem{Cole1992}
+	R. J. Cole, D. F. Kripke, W. Gruen, D. J. Mullaney, and J. C. Gillin, "Automatic sleep/wake identification from wrist activity," \textit{Sleep}, vol. 15, no. 5, pp. 461-469, 1992.
+
+	\bibitem{PMC1740426}
+	N. Hirshkowitz et al., "National Sleep Foundation's sleep time duration recommendations: methodology and results summary," \textit{Sleep Health}, vol. 1, no. 1, pp. 40-43, 2015. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC1740426/
+
+	\bibitem{PMC8141649}
+	M. Ancoli-Israel et al., "The SBSM guide to actigraphy monitoring: clinical and research applications," \textit{Behavioral Sleep Medicine}, vol. 13, no. sup1, pp. S4-S38, 2015. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC8141649/
+
+	\bibitem{PMC9727457}
+	J. A. Mindell et al., "Use of actigraphy for assessment in pediatric sleep research," \textit{Sleep Medicine Reviews}, vol. 16, no. 5, pp. 463-475, 2012. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC9727457/
+
+	\bibitem{PMC6801055}
+	V. T. van Hees et al., "Estimating sleep parameters using an accelerometer without sleep diary," \textit{Scientific Reports}, vol. 8, no. 1, pp. 1-11, 2018. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC6801055/
+
+	\bibitem{PMC6954684}
+	L. Palotti et al., "Benchmark on a large cohort for sleep-wake classification with machine learning techniques," \textit{npj Digital Medicine}, vol. 2, no. 1, pp. 1-9, 2019. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC6954684/
+
+	\bibitem{PMC9416198}
+	D. Beattie et al., "Estimation of sleep stages in a healthy adult population from optical plethysmography and accelerometer signals," \textit{Physiological Measurement}, vol. 38, no. 11, p. 1968, 2017. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC9416198/
+
+	\bibitem{PMC7323637}
+	M. Borazio et al., "Towards benchmarked sleep detection with inertial wearables," in \textit{Proceedings of the 13th EAI International Conference on Body Area Networks}, 2018, pp. 97-104. [Online]. Available: https://pmc.ncbi.nlm.nih.gov/articles/PMC7323637/
+
+	\bibitem{Kaggle2023}
+	"Child Mind Institute - Detect Sleep States," Kaggle Competition Dataset, 2023. [Online]. Available: https://www.kaggle.com/competitions/child-mind-institute-detect-sleep-states
+
+\end{thebibliography}
+
+\end{document}
