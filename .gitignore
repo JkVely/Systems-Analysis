@@ -227,3 +227,5 @@ Thumbs.db
 
 # files
 *.parquet
+*.csv
+_ZENTASKS
